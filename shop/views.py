@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.views import View
 
-# Create your views here.
+
+class LandingPageView(TemplateView):
+    template_name = 'landing.html'
