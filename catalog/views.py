@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.views import View
-from .models import Category, Lead
+from .models import Lead, Category, Product
 from .forms import LeadForm
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
@@ -20,12 +20,6 @@ class LandingPageView(TemplateView):
         context["form"] = LeadForm()
         return context
     
-class CategoryDetailView(DetailView):
-    model = Category
-    template_name = 'category_detail.html'
-    context_object_name = 'category'
-    slug_url_kwarg = 'slug'
-
 class LeadCreateView(CreateView):
     """
     Классовое представление, позволяющее создавать лидов - тех, кто заинтересовался продуктам и сделал заказ звонка (обратную связь)
@@ -57,3 +51,9 @@ class LeadCreateView(CreateView):
                 'errors': form.errors
             }, status=400)
         return super().form_invalid(form)
+
+class CategoryListView(ListView):
+    model = Category
+    context_object_name = 'category'
+    slug_url_kwarg = 'slug'
+
