@@ -52,8 +52,20 @@ class LeadCreateView(CreateView):
             }, status=400)
         return super().form_invalid(form)
 
-class CategoryListView(ListView):
-    model = Category
-    context_object_name = 'category'
-    slug_url_kwarg = 'slug'
-
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'
+    slug_url_kwarg = 'slug'  # Параметр из URL
+    
+    def get_queryset(self):
+        # Получаем категорию по slug
+        category = Category.objects.get(slug=self.kwargs['slug'])
+        # Возвращаем товары этой категории
+        return Product.objects.filter(category=category).select_related('category')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Добавляем категорию в контекст
+        context['category'] = Category.objects.get(slug=self.kwargs['slug'])
+        return context
