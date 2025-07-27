@@ -2,6 +2,46 @@
 {% block title %}БрючникоФФ - Главная{% endblock %}
 {% block content %}
 
+<!-- Модальное окно для формы -->
+<div class="modal fade" id="orderCallModal" tabindex="-1" aria-labelledby="orderCallModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderCallModalLabel">Заказ звонка</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="orderCallForm" method="post" action="{% url 'order_call' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Ваше имя *</label>
+            {{ form.name }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон *</label>
+            {{ form.phone }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+            {{ form.email }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.message.id_for_label }}" class="form-label">Сообщение</label>
+            {{ form.message }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            Отправить
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="container">
     <!-- Приветственный блок --> 
     <div class="row mb-5 py-5">
@@ -12,9 +52,11 @@
                 Станьте нашим партнером и получите выгодные условия сотрудничества, 
                 индивидуальный подход и профессиональную поддержку.
             </p>
-            <a href="#contact-form" class="btn btn-primary btn-lg px-4" style="background-color: #C1221C; border-color: #C1221C;">
-                Получить образцы
-            </a>
+            <!-- Кнопка для открытия модального окна -->
+            <button type="button" class="btn btn-primary btn-lg px-4" style="background-color: #C1221C; border-color: #C1221C;" 
+                    data-bs-toggle="modal" data-bs-target="#orderCallModal">
+                Заказать звонок
+            </button>
         </div>
     </div>
 

@@ -39,12 +39,12 @@ class LeadForm(forms.ModelForm):
         model = Lead
         fields = ['name', 'phone', 'email', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше имя*'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7 (999) 123-45-67*'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше имя'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7 (999) 123-45-67'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email@example.com'}),
             'message': forms.Textarea(attrs={
                 'class': 'form-control', 
-                'placeholder': 'Ваш вопрос или сообщение',
+                'placeholder': 'Время звонка или Ваше сообщение',
                 'rows': 3
             }),
         }

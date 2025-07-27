@@ -2,3 +2,25 @@
     margin-bottom: 1rem;
     line-height: 1.6;
 }
+
+.modal-body input, 
+.modal-body textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.modal-body textarea {
+    min-height: 100px;
+}
+
+.modal-body label {
+    font-weight: 500;
+    color: #26335F;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
