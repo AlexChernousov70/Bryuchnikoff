@@ -123,4 +123,5 @@ if DEBUG:
     mimetypes.add_type("application/javascript", ".js", True)
     MIDDLEWARE += ('django.middleware.common.CommonMiddleware',)
 
-    
+TELEGRAM_BOT_API_KEY = os.getenv('TELEGRAM_BOT_API_KEY')
+TELEGRAM_USER_ID = os.getenv('TELEGRAM_USER_ID')
