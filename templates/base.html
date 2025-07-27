@@ -36,10 +36,12 @@
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Логотип -->
                 <div class="d-flex align-items-center">
-                    <picture>
-                        <source srcset="{% static 'images/logo.webp' %}" type="image/webp">
-                        <img src="{% static 'images/logo.svg' %}" alt="БрючникоФФ" height="50">
-                    </picture>
+                    <a href="{% url 'landing' %}" class="text-decoration-none">
+                        <picture>
+                            <source srcset="{% static 'images/logo.webp' %}" type="image/webp">
+                            <img src="{% static 'images/logo.svg' %}" alt="БрючникоФФ" height="50">
+                        </picture>
+                    </a>
                     <div class="ms-4 d-none d-md-block">
                         <div class="text-muted small">Режим работы:</div>
                         <div>Пн-Пт: 08:00-18:00</div>
