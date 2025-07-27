@@ -9,6 +9,9 @@ from django.http import JsonResponse
 
 
 class LandingPageView(TemplateView):
+    """
+    Классовое представление главной страницы, с возможностью открыть форму в модальном окне и просмотром категорий товаров в каталоге, подгружаемую из БД
+    """
     template_name = 'landing.html'
 
     def get_context_data(self, **kwargs):
@@ -24,11 +27,17 @@ class CategoryDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
 class LeadCreateView(CreateView):
+    """
+    Классовое представление, позволяющее создавать лидов - тех, кто заинтересовался продуктам и сделал заказ звонка (обратную связь)
+    """
     model = Lead
     form_class = LeadForm
     template_name = 'catalog/order_call.html'
 
     def form_valid(self, form):
+        """
+        если форма валидна сохраняем объект в БД, возвращаем сообщение об успехе через AJAX
+        """
         self.object = form.save()
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
@@ -39,13 +48,12 @@ class LeadCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        """
+        если форма не валидна возвращаем сообщение об ошибке
+        """
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': False,
                 'errors': form.errors
             }, status=400)
         return super().form_invalid(form)
-        
-    def get_success_url(self):
-        """Перенаправление на главную страницу после успешной отправки"""
-        return reverse('landing')
