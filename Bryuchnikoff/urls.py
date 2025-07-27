@@ -3,14 +3,14 @@ from django.urls import path, include
 # from django.conf import settings
 # from django.conf.urls.static import static
 
-from shop.views import LandingPageView
+from catalog.views import LandingPageView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", LandingPageView.as_view(), name="landing"),
-    # Подключаем маршруты из приложения core
-    path('catalog/', include('shop.urls')),
+    # Подключаем маршруты из приложения catalog
+    path('catalog/', include('catalog.urls')),
 ]
 
 # if settings.DEBUG:

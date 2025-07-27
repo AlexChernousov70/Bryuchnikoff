@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shop',
+    'catalog',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +123,7 @@ STATIC_URL = '/static/'
 
 # Это список путей к папкам с исходными статическими файлами
 STATICFILES_DIRS = [
-    BASE_DIR / "shop/static",
+    BASE_DIR / "catalog/static",
     BASE_DIR / "static",
 ]
 
