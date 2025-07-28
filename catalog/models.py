@@ -21,7 +21,7 @@ class Category(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products', verbose_name="Категория") # при удалени категории, товару присваивается категория NULL
     name = models.CharField(max_length=200, verbose_name="Название")
-    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL")
+    article = models.CharField(max_length=10, default="", unique=True, verbose_name="Артикул")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     description = models.TextField(blank=True, verbose_name="Описание")
     image = models.ImageField(upload_to='products/', verbose_name="Основное изображение")
@@ -35,7 +35,6 @@ class Product(models.Model):
         verbose_name_plural = "Товары"
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['id', 'slug']),
             models.Index(fields=['name']),
             models.Index(fields=['-created_at']),
         ]
