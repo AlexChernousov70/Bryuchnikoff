@@ -1,5 +1,8 @@
 from django import forms
 from .models import Order, Lead, Review
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+
 
 
 class OrderForm(forms.ModelForm):
@@ -35,6 +38,8 @@ class ReviewForm(forms.ModelForm):
         }
 
 class LeadForm(forms.ModelForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    
     class Meta:
         model = Lead
         fields = ['name', 'phone', 'email', 'message']

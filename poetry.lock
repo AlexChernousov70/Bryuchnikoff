@@ -71,6 +71,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-recaptcha"
+version = "4.1.0"
+description = "Django recaptcha form field/widget app."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django_recaptcha-4.1.0-py3-none-any.whl", hash = "sha256:463aa65967e973de466b28ce8e8b6abb2faffb1ce0c7faa1bf0e5b041e0497cb"},
+    {file = "django_recaptcha-4.1.0.tar.gz", hash = "sha256:73097b958733f65b729d4e4630c51fc2bf147aca6f026017d18898dfc25cb4c5"},
+]
+
+[package.dependencies]
+django = "*"
+
+[package.extras]
+testing = ["coveralls", "tox", "tox-gh-actions"]
+
+[[package]]
 name = "h11"
 version = "0.16.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -367,4 +385,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "b1d66c084e51b47061d9ebe99017686067c18a260507b420216d315e75e46e78"
+content-hash = "8aefecbd70e1c3ee8ddddd978d5b24204c1a1df2fb44f4a0df55a84e115efbe1"

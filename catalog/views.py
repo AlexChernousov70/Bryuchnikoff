@@ -6,6 +6,7 @@ from .forms import LeadForm
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
+from django.conf import settings
 
 
 class LandingPageView(TemplateView):
@@ -18,8 +19,9 @@ class LandingPageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context["form"] = LeadForm()
+        context['RECAPTCHA_PUBLIC_KEY'] = settings.RECAPTCHA_PUBLIC_KEY
         return context
-    
+
 class LeadCreateView(CreateView):
     """
     Классовое представление, позволяющее создавать лидов - тех, кто заинтересовался продуктам и сделал заказ звонка (обратную связь)
@@ -32,6 +34,17 @@ class LeadCreateView(CreateView):
         """
         если форма валидна сохраняем объект в БД, возвращаем сообщение об успехе через AJAX
         """
+        # Проверка reCAPTCHA
+        captcha_response = self.request.POST.get('g-recaptcha-response')
+        if not captcha_response:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'captcha': ['Пожалуйста, пройдите проверку reCAPTCHA']}
+                }, status=400)
+            form.add_error(None, 'Пожалуйста, пройдите проверку reCAPTCHA')
+            return self.form_invalid(form)
+        
         self.object = form.save()
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({

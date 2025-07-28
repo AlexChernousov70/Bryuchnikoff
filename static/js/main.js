@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Создаем контейнер для toast один раз при загрузке страницы
+    // Создаем контейнер для toast
     const createToastContainer = () => {
         const container = document.createElement('div');
         container.id = 'toastContainer';
@@ -53,14 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Валидация
+            // Проверка reCAPTCHA
+            const captchaResponse = grecaptcha.getResponse();
+            if (!captchaResponse) {
+                showToast('Пожалуйста, подтвердите, что вы не робот', 'error');
+                return;
+            }
+
+            // Валидация обязательных полей
             const phoneInput = this.querySelector('#id_phone');
             if (!phoneInput.value.trim()) {
                 showToast('Пожалуйста, заполните телефон', 'warning');
                 phoneInput.focus();
                 return;
             }
-            
+
             // Индикатор загрузки
             const submitBtn = this.querySelector('[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
@@ -69,18 +76,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Отправка...
             `;
-            
+
+            // Подготовка данных формы
+            const formData = new FormData(this);
+            formData.append('g-recaptcha-response', captchaResponse);
+
             // AJAX-отправка
             fetch(this.action, {
                 method: 'POST',
-                body: new FormData(this),
+                body: formData,
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             })
             .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) {
+                    return response.json().then(errData => {
+                        throw new Error(errData.errors || 'Ошибка сервера');
+                    });
+                }
                 return response.json();
             })
             .then(data => {
@@ -91,15 +106,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         const modal = bootstrap.Modal.getInstance(document.getElementById('orderCallModal'));
                         if (modal) modal.hide();
                         this.reset();
+                        grecaptcha.reset(); // Сбрасываем капчу
                     }, 1000);
-                } else if (data.errors) {
-                    let errorText = Object.values(data.errors).flat().join('\n');
+                } else {
+                    const errorText = data.errors ? Object.values(data.errors).flat().join('\n') : 'Неизвестная ошибка';
                     showToast(errorText, 'error');
+                    grecaptcha.reset(); // Сбрасываем капчу при ошибке
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Произошла ошибка при отправке формы', 'error');
+                showToast(error.message || 'Произошла ошибка при отправке формы', 'error');
+                grecaptcha.reset(); // Сбрасываем капчу при ошибке
             })
             .finally(() => {
                 submitBtn.disabled = false;

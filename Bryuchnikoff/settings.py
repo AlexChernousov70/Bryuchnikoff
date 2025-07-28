@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,11 @@ if DEBUG:
 
 TELEGRAM_BOT_API_KEY = os.getenv('TELEGRAM_BOT_API_KEY')
 TELEGRAM_USER_ID = os.getenv('TELEGRAM_USER_ID')
+
+# reCAPTCHA тестовые настройки, эти ключи не подойдут для продакшена
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+
+# RECAPTCHA_DOMAIN = 'www.recaptcha.net'  # если google.com заблокирован в вашей стране
+
+SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
