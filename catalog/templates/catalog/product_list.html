@@ -43,8 +43,9 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
 {{ block.super }}
+
+<script>
 $(document).ready(function() {
     // Обработка изменения количества
     $('.plus-btn').click(function() {

@@ -4,7 +4,6 @@ from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
 
-
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
