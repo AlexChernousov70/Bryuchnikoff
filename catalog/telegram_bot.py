@@ -11,13 +11,13 @@ load_dotenv()
 # Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
 
-async def send_telegram_message(token, chat_id, message, parse_mode="HTML"):
+async def send_telegram_message(token, chat_id, message, parse_mode="MarkdownV2"):
     try:
         bot = Bot(token=token)
         await bot.send_message(
             chat_id=chat_id,
             text=message,
-            parse_mode="HTML",
+            parse_mode=parse_mode,
             disable_web_page_preview=True,
             disable_notification=False
         )
