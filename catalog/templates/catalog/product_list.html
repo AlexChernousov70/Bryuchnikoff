@@ -1,18 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}БрючникоФФ - {{ category.name }}{% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h1 class="mb-4">{{ category.name }}</h1>
-    
-    {% if category.description %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <p class="card-text">{{ category.description }}</p>
-        </div>
-    </div>
-    {% endif %}
+<div class="row mb-5">
+{% include 'catalog/includes/catalog.html' %}
+
+<div class="container my-5 col-md-9">
+    <h1 class="display-4 mb-4" style="color: #26335F;">{{ category.name }}</h1>
     
     <div class="row">
         {% for product in products %}
@@ -35,5 +30,6 @@
         </div>
         {% endfor %}
     </div>
+</div>
 </div>
 {% endblock %}
