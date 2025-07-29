@@ -4,9 +4,7 @@ from django.views import View
 from .models import Lead, Category, Product
 from .forms import LeadForm
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
-from django.conf import settings
 
 
 class LandingPageView(TemplateView):
@@ -19,7 +17,6 @@ class LandingPageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context["form"] = LeadForm()
-        context['RECAPTCHA_PUBLIC_KEY'] = settings.RECAPTCHA_PUBLIC_KEY
         return context
 
 class LeadCreateView(CreateView):
@@ -83,7 +80,6 @@ class ProductListView(ListView):
         context["categories"] = Category.objects.all()
         context['category'] = Category.objects.get(slug=self.kwargs['slug'])
         context["form"] = LeadForm()
-        context['RECAPTCHA_PUBLIC_KEY'] = settings.RECAPTCHA_PUBLIC_KEY
         return context
 
 class ProductListDetail(DetailView):
