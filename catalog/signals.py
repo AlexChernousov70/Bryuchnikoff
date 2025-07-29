@@ -5,6 +5,7 @@ from .models import Lead
 from .telegram_bot import send_telegram_message
 from asyncio import run
 from django.conf import settings
+from django.utils import timezone
 import html
 import logging
 import re
@@ -20,7 +21,9 @@ def send_lead_notification(sender, instance, created, **kwargs):
         return
 
     try:
-        created_at = instance.created_at.strftime("%d.%m.%Y %H:%M")
+        # конвертирую время в московское
+        moscow_time = timezone.localtime(instance.created_at)
+        created_at = moscow_time.strftime("%d.%m.%Y %H:%M")
         
         # Получаем чистый номер (только цифры и +)
         clean_phone = '+7' + re.sub(r'[^\d]', '', instance.phone)[1:]
