@@ -80,5 +80,31 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Добавляем категорию в контекст
+        context["categories"] = Category.objects.all()
         context['category'] = Category.objects.get(slug=self.kwargs['slug'])
+        context["form"] = LeadForm()
+        context['RECAPTCHA_PUBLIC_KEY'] = settings.RECAPTCHA_PUBLIC_KEY
+        return context
+
+class ProductListDetail(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
+    pk_url_kwarg = 'product_id'
+    slug_url_kwarg = 'slug'
+
+    def get_object(self, queryset=None):
+        try:
+            # Получаем товар по ID и проверяем, что он принадлежит указанной категории
+            return Product.objects.get(
+                id=self.kwargs['product_id'],
+                category__slug=self.kwargs['slug']
+            )
+        except Product.DoesNotExist:
+            raise Http404("Товар не найден")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.object.category
+        context['categories'] = Category.objects.all()
         return context
