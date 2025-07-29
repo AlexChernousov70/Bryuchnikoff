@@ -57,14 +57,16 @@
                         <!-- Телеграм -->
                         <a href="https://t.me/kostumoff" target="_blank" 
                             class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center ms-2" 
-                            style="width: 44px; height: 44px;">
+                            style="width: 44px; height: 44px;"
+                            title="Написать в Telegram">
                             <i class="bi bi-telegram fs-5"></i>
                         </a>
                         
                         <!-- WhatsApp -->
                         <a href="https://wa.me/79808004601" target="_blank" 
                             class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center ms-2" 
-                            style="width: 44px; height: 44px;">
+                            style="width: 44px; height: 44px;"
+                            title="Написать в WhatsApp">
                             <i class="bi bi-whatsapp fs-5"></i>
                         </a>
                         
@@ -72,13 +74,24 @@
                         <div class="dropdown ms-2">
                             <button class="rounded-circle bg-secondary text-white border-0 d-flex align-items-center justify-content-center" 
                                     style="width: 44px; height: 44px;" 
-                                    type="button" data-bs-toggle="dropdown">
+                                    type="button" data-bs-toggle="dropdown"
+                                    title="Позвонить нам">
                                 <i class="bi bi-telephone-fill fs-5"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="tel:+74951042707">+7 (495) 104-27-07</a></li>
                                 <li><a class="dropdown-item" href="tel:+78007772707">+7 (800) 777-27-07</a></li>
                             </ul>
+                        </div>
+
+                        <!-- Обратный звонок -->
+                        <div class="ms-2">
+                            <button class="rounded-circle bg-secondary text-white border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 44px; height: 44px;" 
+                                    type="button" data-bs-toggle="modal" data-bs-target="#orderCallModal"
+                                    title="Заказать обратный звонок">
+                                <i class="bi bi-telephone-inbound fs-5"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -139,14 +152,22 @@
                 <div class="d-flex align-items-center mt-3">
                     <a href="https://t.me/kostumoff" target="_blank" 
                         class="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center me-2" 
-                        style="width: 36px; height: 36px; background-color: #0088cc; border-color: #0088cc;">
+                        style="width: 36px; height: 36px; background-color: #0088cc; border-color: #0088cc;"
+                        title="Написать в Telegram">
                         <i class="bi bi-telegram text-white fs-6"></i>
                     </a>
                     <a href="https://wa.me/79808004601" target="_blank" 
-                        class="btn btn-success btn-sm rounded-circle d-flex align-items-center justify-content-center" 
-                        style="width: 36px; height: 36px; background-color: #25D366; border-color: #25D366;">
+                        class="btn btn-success btn-sm rounded-circle d-flex align-items-center justify-content-center me-2" 
+                        style="width: 36px; height: 36px; background-color: #25D366; border-color: #25D366;"
+                        title="Написать в WhatsApp">
                         <i class="bi bi-whatsapp text-white fs-6"></i>
                     </a>
+                    <button class="btn btn-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" 
+                        style="width: 36px; height: 36px;" 
+                        data-bs-toggle="modal" data-bs-target="#orderCallModal"
+                        title="Заказать обратный звонок">
+                        <i class="bi bi-telephone-inbound text-white fs-6"></i>
+                    </button>
                 </div>
             </div>
             
