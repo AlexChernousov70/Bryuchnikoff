@@ -3,33 +3,91 @@
 {% block title %}{{ category.name }}{% endblock %}
 
 {% block content %}
-<div class="row mb-5">
-{% include 'catalog/includes/catalog.html' %}
-
-<div class="container my-5 col-md-9">
-    <h1 class="display-4 mb-4" style="color: #26335F;">{{ category.name }}</h1>
-    
+{% include 'catalog/includes/order_call.html' %}
+<div class="container-fluid mt-4">
     <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.price }} руб.</p>
-                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                    <a href="#" class="btn btn-primary">Подробнее</a>
+        <!-- Каталог слева -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="h5 mb-0" style="color: #26335F;">Каталог товаров</h2>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for cat in categories %}
+                    <a href="{% url 'product_list' cat.slug %}" 
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 {% if cat.id == category.id %}active{% endif %}"
+                        style="{% if cat.id == category.id %}background-color: #26335F; color: white;{% else %}border-left: 4px solid #C1221C; color: #26335F;{% endif %}">
+                        {{ cat.name }}
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info">В этой категории пока нет товаров</div>
+
+        <!-- Товары справа -->
+        <div class="col-lg-9 col-md-8">
+            <h1 class="h2 mb-4" style="color: #26335F;">{{ category.name }}</h1>
+
+            {% if products %}
+                {% include 'catalog/includes/product_card.html' %}
+
+            {% else %}
+                <div class="alert alert-info">
+                    В этой категории пока нет товаров
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
 </div>
-</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+{{ block.super }}
+$(document).ready(function() {
+    // Обработка изменения количества
+    $('.plus-btn').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        let value = parseInt(input.val());
+        input.val(value + 1);
+        updatePrice(input);
+    });
+
+    $('.minus-btn').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        let value = parseInt(input.val());
+        if (value > 1) {
+            input.val(value - 1);
+            updatePrice(input);
+        }
+    });
+
+    $('.quantity-input').change(function() {
+        let value = parseInt($(this).val());
+        if (isNaN(value) || value < 1) {
+            $(this).val(1);
+        }
+        updatePrice($(this));
+    });
+
+    function updatePrice(input) {
+        let quantity = parseInt(input.val());
+        let price = parseFloat(input.data('price'));
+        let total = (quantity * price).toFixed(2);
+        input.closest('.card-footer').find('.h4').text(total + ' ₽');
+    }
+
+    // Обработка формы заказа
+    $('.add-to-cart-form').submit(function(e) {
+        e.preventDefault();
+        let form = $(this);
+        let productId = form.find('.quantity-input').data('product-id');
+        let quantity = form.find('.quantity-input').val();
+        
+        // Здесь можно добавить AJAX-запрос для отправки данных на сервер
+        alert(`Товар ID: ${productId}, Количество: ${quantity} добавлен в корзину`);
+    });
+});
+</script>
 {% endblock %}
