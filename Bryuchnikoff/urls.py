@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-# from django.conf import settings
-# from django.conf.urls.static import static
-
+from django.conf import settings # для работы с изображениями при разработке
+from django.conf.urls.static import static # для работы с изображениями при разработке
 from catalog.views import LandingPageView
 
 
@@ -13,8 +12,9 @@ urlpatterns = [
     path('catalog/', include('catalog.urls')),
 ]
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# для работы с изображениями при разработке
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     
 #     import debug_toolbar
 #     urlpatterns = [

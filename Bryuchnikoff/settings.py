@@ -101,10 +101,6 @@ USE_I18N = True
 
 USE_TZ = True # Должно быть True для корректной работы с часовыми поясами
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 # URL-префикс для доступа к статическим файлам в браузере
 STATIC_URL = '/static/'
 
@@ -130,7 +126,10 @@ TELEGRAM_USER_ID = os.getenv('TELEGRAM_USER_ID')
 # reCAPTCHA тестовые настройки, эти ключи не подойдут для продакшена
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
-
-# RECAPTCHA_DOMAIN = 'www.recaptcha.net'  # если google.com заблокирован в вашей стране
+RECAPTCHA_DOMAIN = 'www.recaptcha.net' # на всякий случай, если google.com будет работать некоректно
 
 SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
+
+# храним медиа файлы в корне
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
