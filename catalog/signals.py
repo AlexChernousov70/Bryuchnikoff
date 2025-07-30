@@ -9,7 +9,7 @@ from asyncio import run
 from django.conf import settings
 from django.utils import timezone
 
-from .models import Lead
+from .models import OrderCallBack
 
 TELEGRAM_BOT_API_KEY = settings.TELEGRAM_BOT_API_KEY
 TELEGRAM_USER_ID = settings.TELEGRAM_USER_ID
@@ -23,7 +23,7 @@ def escape_markdown(text: str) -> str:
     # Создаем регулярное выражение для поиска этих символов
     return re.sub(f'([{re.escape(escape_chars)}])', r'\\\1', text)
 
-@receiver(post_save, sender=Lead)
+@receiver(post_save, sender=OrderCallBack)
 def send_lead_notification(sender, instance, created, **kwargs):
     if not created:
         return

@@ -86,7 +86,7 @@ class Review(models.Model):
     def __str__(self):
         return f"Отзыв на {self.product.name} от {self.name}"
     
-class Lead(models.Model):
+class OrderCallBack(models.Model):
     name = models.CharField(max_length=100, verbose_name="Имя")
     phone = models.CharField(max_length=20, verbose_name="Телефон")
     email = models.EmailField(blank=True, verbose_name="Email")

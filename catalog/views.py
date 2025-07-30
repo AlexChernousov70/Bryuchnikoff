@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.views import View
-from .models import Lead, Category, Product
-from .forms import LeadForm
+from .models import OrderCallBack, Category, Product
+from .forms import OrderCallBackForm
 from django.contrib import messages
 from django.http import JsonResponse
 
@@ -16,15 +16,15 @@ class LandingPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
-        context["form"] = LeadForm()
+        context["form"] = OrderCallBackForm()
         return context
 
-class LeadCreateView(CreateView):
+class OrderCallBackCreateView(CreateView):
     """
     Классовое представление, позволяющее создавать лидов - тех, кто заинтересовался продуктам и сделал заказ звонка (обратную связь)
     """
-    model = Lead
-    form_class = LeadForm
+    model = OrderCallBack
+    form_class = OrderCallBackForm
     template_name = 'catalog/order_call.html'
 
     def form_valid(self, form):
@@ -79,7 +79,7 @@ class ProductListView(ListView):
         # Добавляем категорию в контекст
         context["categories"] = Category.objects.all()
         context['category'] = Category.objects.get(slug=self.kwargs['slug'])
-        context["form"] = LeadForm()
+        context["form"] = OrderCallBackForm()
         return context
 
 class ProductListDetail(DetailView):

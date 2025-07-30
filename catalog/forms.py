@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order, Lead, Review
+from .models import Order, OrderCallBack, Review
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
@@ -36,11 +36,11 @@ class ReviewForm(forms.ModelForm):
             'text': 'Текст отзыва',
         }
 
-class LeadForm(forms.ModelForm):
+class OrderCallBackForm(forms.ModelForm):
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
     
     class Meta:
-        model = Lead
+        model = OrderCallBack
         fields = ['name', 'phone', 'email', 'message']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше имя'}),
