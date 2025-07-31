@@ -3,5 +3,181 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'product_list' product.category.slug %}" style="color: #26335F;">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
 
+    <div class="row">
+        <!-- Изображение товара -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" 
+                     class="card-img-top img-fluid" 
+                     alt="{{ product.name }}">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Информация о товаре -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h1 class="h2 mb-3" style="color: #26335F;">{{ product.name }}</h1>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price }} ₽</div>
+                        {% if product.in_stock %}
+                            <span class="badge bg-success">В наличии</span>
+                        {% else %}
+                            <span class="badge bg-danger">Нет в наличии</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="h5 mb-2" style="color: #26335F;">Описание</h3>
+                        <p>{{ product.description }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="h5 mb-2" style="color: #26335F;">Характеристики</h3>
+                        <ul class="list-unstyled">
+                            <li><strong>Артикул:</strong> {{ product.article }}</li>
+                            <li><strong>Категория:</strong> {{ product.category.name }}</li>
+                        </ul>
+                    </div>
+
+                    {% if product.in_stock %}
+                    <form class="add-to-cart-form">
+                        <div class="input-group mb-3" style="max-width: 200px;">
+                            <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
+                            <input type="number" 
+                                   class="form-control text-center quantity-input" 
+                                   value="1" 
+                                   min="1" 
+                                   data-price="{{ product.price }}"
+                                   data-product-id="{{ product.id }}">
+                            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+                        </div>
+                        <button type="button" 
+                                class="btn btn-primary w-100 order-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#orderCallModal">
+                            <i class="bi bi-cart3 me-2"></i>Оформить заказ
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Отзывы -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="h4 mb-4" style="color: #26335F;">Отзывы</h2>
+                    
+                    {% if product.reviews.all %}
+                        {% for review in product.reviews.all %}
+                            {% if review.is_public %}
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h5 class="mb-0">{{ review.name }}</h5>
+                                    <small class="text-muted">{{ review.created_at|date:"d.m.Y" }}</small>
+                                </div>
+                                <p>{{ review.text }}</p>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Пока нет отзывов об этом товаре.</p>
+                    {% endif %}
+
+                    <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                        Оставить отзыв
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно заказа (включаем из order_call.html) -->
+{% include 'catalog/includes/order_call.html' %}
+
+<!-- Модальное окно для отзыва -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Оставить отзыв</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'product_detail' product.category.slug product.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="reviewName" class="form-label">Ваше имя</label>
+                        <input type="text" class="form-control" id="reviewName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reviewText" class="form-label">Текст отзыва</label>
+                        <textarea class="form-control" id="reviewText" name="text" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+
+<script>
+$(document).ready(function() {
+    // Обработка изменения количества
+    $('.plus-btn').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        let value = parseInt(input.val());
+        input.val(value + 1);
+        updatePrice(input);
+    });
+
+    $('.minus-btn').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        let value = parseInt(input.val());
+        if (value > 1) {
+            input.val(value - 1);
+            updatePrice(input);
+        }
+    });
+
+    $('.quantity-input').change(function() {
+        let value = parseInt($(this).val());
+        if (isNaN(value) || value < 1) {
+            $(this).val(1);
+        }
+        updatePrice($(this));
+    });
+
+    function updatePrice(input) {
+        let quantity = parseInt(input.val());
+        let price = parseFloat(input.data('price'));
+        let total = (quantity * price).toFixed(2);
+        // Можно добавить отображение общей суммы, если нужно
+    }
+});
+</script>
 {% endblock %}

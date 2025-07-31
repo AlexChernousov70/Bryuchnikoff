@@ -1,0 +1,35 @@
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.product-image-wrapper {
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.order-btn {
+    background-color: #26335F;
+    color: white;
+    transition: all 0.3s ease;
+}
+.order-btn:hover {
+    background-color: #1a284a;
+    color: white;
+}
+.card-img-top {
+    transition: transform 0.5s ease;
+}
+.card-img-top:hover {
+    transform: scale(1.05);
+}
+a.text-decoration-none {
+    text-decoration: none !important;
+}
+a.text-decoration-none:hover h5 {
+    color: #1a284a !important;
+}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -41,6 +42,12 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={
+            'slug': self.category.slug,  # slug категории
+            'product_id': self.id        # ID товара
+        })
     
 class Order(models.Model):
     STATUS_CHOICES = [
