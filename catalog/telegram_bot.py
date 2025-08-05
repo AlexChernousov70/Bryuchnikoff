@@ -1,6 +1,6 @@
 import os
 import logging
-from telegram import Bot # poetry add python-telegram-bot
+from telegram import Bot
 import asyncio
 from dotenv import load_dotenv
 
@@ -11,13 +11,13 @@ load_dotenv()
 # Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
 
-async def send_telegram_message(token, chat_id, message, parse_mode="MarkdownV2"):
+async def send_telegram_message(token, chat_id, message, parse_mode="HTML"):
     try:
         bot = Bot(token=token)
         await bot.send_message(
             chat_id=chat_id,
             text=message,
-            parse_mode=parse_mode,
+            parse_mode="HTML",
             disable_web_page_preview=True,
             disable_notification=False
         )
