@@ -25,27 +25,29 @@
     <div class="card-footer bg-white border-top border-1 border-light-subtle">
         <div class="d-flex justify-content-end align-items-center mb-3">
             <div class="text-end">
-                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price }} ₽/{{ product.unit }} </div>
+                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price }} ₽/{{ product.unit }}</div>
             </div>
         </div>
         
-        <form class="add-to-cart-form">
-            <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
-                <input type="number" 
-                    class="form-control text-center quantity-input" 
-                    value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
-                    min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
-                    step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
-                    data-price="{{ product.price }}"
-                    data-product-id="{{ product.id }}">
-                <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
-            </div>
-            <button type="submit" 
-                    class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
-                    {% if not product.in_stock %}aria-disabled="true" tabindex="-1"{% endif %}>
-                <i class="bi bi-cart3 me-2"></i>Оформить заказ
-            </button>
-        </form>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
+            <input type="number" 
+                class="form-control text-center quantity-input" 
+                value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
+                data-price="{{ product.price }}"
+                data-product-id="{{ product.id }}">
+            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+        </div>
+        
+        <button type="button" 
+            class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
+            data-bs-toggle="modal" 
+            data-bs-target="#orderCreateModal"
+            data-product-id="{{ product.id }}"
+            data-quantity-selector="$(this).prev('.input-group').find('.quantity-input').val()">
+            <i class="bi bi-cart3 me-2"></i>Оформить заказ
+        </button>
     </div>
 </div>

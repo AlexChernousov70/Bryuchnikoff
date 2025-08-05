@@ -66,17 +66,9 @@ class Product(models.Model):
         })
     
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('new', 'Новый'),
-        ('in_progress', 'В обработке'),
-        ('completed', 'Завершен'),
-        ('canceled', 'Отменен'),
-    ]
-
-    first_name = models.CharField(max_length=50, verbose_name="Имя")
+    name = models.CharField(max_length=50, verbose_name="Имя")
     phone = models.CharField(max_length=20, verbose_name="Телефон")
-    email = models.EmailField(verbose_name="Email")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new', verbose_name="Статус")
+    email = models.EmailField(blank=True, verbose_name="Email")
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
@@ -88,7 +80,7 @@ class Order(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"Заказ #{self.id} - {self.first_name} {self.last_name}"
+        return f"Заказ #{self.id} - {self.name} {self.phone}"
     
 
 class Review(models.Model):

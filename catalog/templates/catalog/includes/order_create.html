@@ -1,0 +1,41 @@
+<!-- Модальное окно для формы -->
+<div class="modal fade" id="orderCreateModal" tabindex="-1" aria-labelledby="orderCreateModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderCreateModalLabel">Оформление заказа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="orderCreateForm" method="post" action="{% url 'create_order' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" id="modalProductId">
+                <input type="hidden" name="quantity" id="modalQuantity">
+                
+                <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Ваше имя *</label>
+                            {{ form.name }}
+                        </div>
+                    <div class="mb-3">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон *</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-label">Подтвердите, что вы не робот</div>
+                        {{ form.captcha }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">
+                        Подтвердить заказ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

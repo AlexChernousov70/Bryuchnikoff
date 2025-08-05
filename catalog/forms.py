@@ -4,17 +4,21 @@ from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
 
-class OrderForm(forms.ModelForm):
+class OrderCreateForm(forms.ModelForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    product_id = forms.IntegerField(widget=forms.HiddenInput())
+    quantity = forms.IntegerField(widget=forms.HiddenInput())
+    
     class Meta:
         model = Order
-        fields = ['first_name', 'phone', 'email']
+        fields = ['name', 'phone', 'email']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше имя'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше имя'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7 (999) 123-45-67'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email@example.com'}),
         }
         labels = {
-            'first_name': 'Ваше имя',
+            'name': 'Ваше имя',
             'phone': 'Телефон',
             'email': 'Email',
         }

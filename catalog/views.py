@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.views import View
-from .models import OrderCallBack, Category, Product
-from .forms import OrderCallBackForm
+from .models import OrderCallBack, Category, Product, Order
+from .forms import OrderCallBackForm, OrderCreateForm
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
+from django.core.exceptions import ValidationError
+import json
 
 
 class LandingPageView(TemplateView):
@@ -104,3 +106,62 @@ class ProductListDetail(DetailView):
         context['category'] = self.object.category
         context['categories'] = Category.objects.all()
         return context
+
+class OrderCreateView(CreateView):
+    model = Order
+    form_class = OrderCreateForm
+    template_name = 'catalog/order_create.html'  # Укажите ваш шаблон
+    
+    def form_valid(self, form):
+        # Проверка reCAPTCHA
+        captcha_response = self.request.POST.get('g-recaptcha-response')
+        if not captcha_response:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'captcha': ['Пожалуйста, пройдите проверку reCAPTCHA']}
+                }, status=400)
+            form.add_error(None, 'Пожалуйста, пройдите проверку reCAPTCHA')
+            return self.form_invalid(form)
+        
+        try:
+            data = json.loads(self.request.body) if self.request.body else self.request.POST
+            product = Product.objects.get(
+                id=data.get('product_id'), 
+                in_stock=True
+            )
+            
+            order = form.save(commit=False)
+            order.total = product.price * int(data.get('quantity', 1))
+            order.save()
+            
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Ваш заказ успешно оформлен!'
+                })
+            
+            messages.success(self.request, 'Ваш заказ успешно оформлен!')
+            return super().form_valid(form)
+            
+        except Product.DoesNotExist:
+            error = 'Товар не найден или отсутствует в наличии'
+        except Exception as e:
+            error = str(e)
+            
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'error': error
+            }, status=400)
+        
+        form.add_error(None, error)
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+        return super().form_invalid(form)

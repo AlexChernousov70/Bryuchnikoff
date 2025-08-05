@@ -61,12 +61,13 @@
                                 data-product-id="{{ product.id }}">
                             <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
                         </div>
-                        <button type="button" 
-                                class="btn btn-primary w-100 order-btn" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#orderCallModal">
-                            <i class="bi bi-cart3 me-2"></i>Оформить заказ
-                        </button>
+                    <button type="button" 
+                            class="btn btn-primary w-100 order-btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#orderCreateModal"
+                            onclick="prepareOrderModal('{{ product.id }}', $('.quantity-input').val())">
+                        <i class="bi bi-cart3 me-2"></i>Оформить заказ
+                    </button>
                     </form>
                     {% endif %}
                 </div>
@@ -107,7 +108,7 @@
 </div>
 
 <!-- Модальное окно заказа (включаем из order_call.html) -->
-{% include 'catalog/includes/order_call.html' %}
+
 
 <!-- Модальное окно для отзыва -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
@@ -137,7 +138,8 @@
         </div>
     </div>
 </div>
-
+{% include 'catalog/includes/order_call.html' %}
+{% include 'catalog/includes/order_create.html' %}
 {% endblock %}
 
 {% block scripts %}
@@ -174,5 +176,58 @@ $(document).ready(function() {
         }
     });
 });
+</script>
+
+<script>
+function prepareOrderModal(productId, quantity) {
+    $('#product_id').val(productId);
+    $('#quantity').val(quantity);
+}
+
+$(document).ready(function() {
+    $('#orderCreateForm').submit(function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const submitBtn = form.find('button[type="submit"]');
+        const spinner = submitBtn.find('.spinner-border');
+        
+        spinner.removeClass('d-none');
+        submitBtn.prop('disabled', true);
+        
+        $.ajax({
+            type: "POST",
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function(response) {
+                $('#orderCreateModal').modal('hide');
+                showSuccessAlert('Ваш заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.');
+                form.trigger("reset");
+            },
+            error: function(xhr) {
+                showErrorAlert('Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже.');
+            },
+            complete: function() {
+                spinner.addClass('d-none');
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+});
+
+function showSuccessAlert(message) {
+    const alert = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+    $('.container.mt-4').prepend(alert);
+}
+
+function showErrorAlert(message) {
+    const alert = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+    $('.container.mt-4').prepend(alert);
+}
 </script>
 {% endblock %}
