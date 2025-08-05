@@ -10,7 +10,7 @@
         <div class="col-lg-3 col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                    <h2 class="h5 mb-0" style="color: #26335F;">Каталог товаров</h2>
+                    <h2 class="h5 mb-0" style="color: #26335F;">Каталог</h2>
                 </div>
                 <div class="list-group list-group-flush">
                     {% for cat in categories %}
@@ -25,13 +25,17 @@
             </div>
         </div>
 
-        <!-- Товары справа -->
         <div class="col-lg-9 col-md-8">
             <h1 class="h2 mb-4" style="color: #26335F;">{{ category.name }}</h1>
 
             {% if products %}
-                {% include 'catalog/includes/product_card.html' %}
-
+                <div class="row g-4">
+                    {% for product in products %}
+                        <div class="col-xl-4 col-lg-6 col-md-6">
+                            {% include 'catalog/includes/product_card.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
             {% else %}
                 <div class="alert alert-info">
                     В этой категории пока нет товаров
@@ -50,34 +54,32 @@ $(document).ready(function() {
     // Обработка изменения количества
     $('.plus-btn').click(function() {
         let input = $(this).siblings('.quantity-input');
+        let step = parseInt(input.attr('step'));
         let value = parseInt(input.val());
-        input.val(value + 1);
-        updatePrice(input);
+        input.val(value + step);
     });
 
     $('.minus-btn').click(function() {
         let input = $(this).siblings('.quantity-input');
+        let step = parseInt(input.attr('step'));
         let value = parseInt(input.val());
-        if (value > 1) {
-            input.val(value - 1);
-            updatePrice(input);
+        if (value > step || (value > 1 && step === 1)) {
+            input.val(value - step);
         }
     });
 
     $('.quantity-input').change(function() {
+        let step = parseInt($(this).attr('step'));
+        let min = parseInt($(this).attr('min'));
         let value = parseInt($(this).val());
-        if (isNaN(value) || value < 1) {
-            $(this).val(1);
+        
+        if (isNaN(value) || value < min) {
+            $(this).val(min);
+        } else if (value % step !== 0) {
+            let rounded = Math.round(value / step) * step;
+            $(this).val(rounded < min ? min : rounded);
         }
-        updatePrice($(this));
     });
-
-    function updatePrice(input) {
-        let quantity = parseInt(input.val());
-        let price = parseFloat(input.data('price'));
-        let total = (quantity * price).toFixed(2);
-        input.closest('.card-footer').find('.h4').text(total + ' ₽');
-    }
 
     // Обработка формы заказа
     $('.add-to-cart-form').submit(function(e) {
@@ -90,5 +92,7 @@ $(document).ready(function() {
         alert(`Товар ID: ${productId}, Количество: ${quantity} добавлен в корзину`);
     });
 });
+
+
 </script>
 {% endblock %}

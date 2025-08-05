@@ -20,6 +20,13 @@ class Category(models.Model):
         return self.name
     
 class Product(models.Model):
+    UNIT_CHOICES = [
+        ('шт', 'Штуки'),
+        ('к-т', 'Комплекты'),
+        ('упак', 'Упаковки'),
+        ('метр', 'Метры'),
+        ('кг', 'Килограммы'),
+    ]
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products', verbose_name="Категория") # при удалени категории, товару присваивается категория NULL
     name = models.CharField(max_length=200, verbose_name="Название")
     article = models.CharField(max_length=10, default="", unique=True, verbose_name="Артикул")
@@ -27,6 +34,15 @@ class Product(models.Model):
     description = models.TextField(blank=True, verbose_name="Описание")
     image = models.ImageField(upload_to='products/', verbose_name="Основное изображение")
     in_stock = models.BooleanField(default=True, verbose_name="В наличии")
+
+    unit = models.CharField(
+        max_length=10,
+        choices=UNIT_CHOICES,
+        default='шт',
+        verbose_name="Единица измерения"
+    )
+    bulk_only = models.BooleanField(default=False, verbose_name="Только оптом (упаковкой по X штук)")
+    bulk_quantity = models.PositiveIntegerField(default=1000, verbose_name="Кратность упаковки")
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")

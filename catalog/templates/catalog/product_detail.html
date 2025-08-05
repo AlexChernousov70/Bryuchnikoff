@@ -17,8 +17,8 @@
             <div class="card shadow-sm border-0">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" 
-                     class="card-img-top img-fluid" 
-                     alt="{{ product.name }}">
+                    class="card-img-top img-fluid" 
+                    alt="{{ product.name }}">
                 {% endif %}
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <h1 class="h2 mb-3" style="color: #26335F;">{{ product.name }}</h1>
                     
                     <div class="d-flex align-items-center mb-3">
-                        <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price }} ₽</div>
+                        <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price }} ₽/{{ product.unit }}</div>
                         {% if product.in_stock %}
                             <span class="badge bg-success">В наличии</span>
                         {% else %}
@@ -44,11 +44,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <h3 class="h5 mb-2" style="color: #26335F;">Характеристики</h3>
-                        <ul class="list-unstyled">
-                            <li><strong>Артикул:</strong> {{ product.article }}</li>
-                            <li><strong>Категория:</strong> {{ product.category.name }}</li>
-                        </ul>
+                        <h3 class="h5 mb-2" style="color: #26335F;">Артикул:</h3>
+                        <p>{{ product.article }}</p>
                     </div>
 
                     {% if product.in_stock %}
@@ -56,11 +53,12 @@
                         <div class="input-group mb-3" style="max-width: 200px;">
                             <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
                             <input type="number" 
-                                   class="form-control text-center quantity-input" 
-                                   value="1" 
-                                   min="1" 
-                                   data-price="{{ product.price }}"
-                                   data-product-id="{{ product.id }}">
+                                class="form-control text-center quantity-input" 
+                                value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                                min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                                step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
+                                data-price="{{ product.price }}"
+                                data-product-id="{{ product.id }}">
                             <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
                         </div>
                         <button type="button" 
@@ -147,37 +145,34 @@
 
 <script>
 $(document).ready(function() {
-    // Обработка изменения количества
     $('.plus-btn').click(function() {
         let input = $(this).siblings('.quantity-input');
+        let step = parseInt(input.attr('step'));
         let value = parseInt(input.val());
-        input.val(value + 1);
-        updatePrice(input);
+        input.val(value + step);
     });
 
     $('.minus-btn').click(function() {
         let input = $(this).siblings('.quantity-input');
+        let step = parseInt(input.attr('step'));
         let value = parseInt(input.val());
-        if (value > 1) {
-            input.val(value - 1);
-            updatePrice(input);
+        if (value > step || (value > 1 && step === 1)) {
+            input.val(value - step);
         }
     });
 
     $('.quantity-input').change(function() {
+        let step = parseInt($(this).attr('step'));
+        let min = parseInt($(this).attr('min'));
         let value = parseInt($(this).val());
-        if (isNaN(value) || value < 1) {
-            $(this).val(1);
+        
+        if (isNaN(value) || value < min) {
+            $(this).val(min);
+        } else if (value % step !== 0) {
+            let rounded = Math.round(value / step) * step;
+            $(this).val(rounded < min ? min : rounded);
         }
-        updatePrice($(this));
     });
-
-    function updatePrice(input) {
-        let quantity = parseInt(input.val());
-        let price = parseFloat(input.data('price'));
-        let total = (quantity * price).toFixed(2);
-        // Можно добавить отображение общей суммы, если нужно
-    }
 });
 </script>
 {% endblock %}
