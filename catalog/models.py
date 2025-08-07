@@ -66,21 +66,27 @@ class Product(models.Model):
         })
     
 class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Товар")
+    quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
+    total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма заказа")
     name = models.CharField(max_length=50, verbose_name="Имя")
     phone = models.CharField(max_length=20, verbose_name="Телефон")
     email = models.EmailField(blank=True, verbose_name="Email")
-
+    
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Сумма заказа")
-    
+
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"Заказ #{self.id} - {self.name} {self.phone}"
+        return f"Заказ #{self.id} - {self.product.name} ({self.quantity} {self.product.unit})"
+    
+    def save(self, *args, **kwargs):
+        self.total = self.product.price * self.quantity
+        super().save(*args, **kwargs)
     
 
 class Review(models.Model):
