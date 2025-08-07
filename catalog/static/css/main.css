@@ -60,3 +60,26 @@ a.text-decoration-none:hover h5 {
     opacity: 0.5 !important;
     background-color: white !important;
 }
+
+/* Стили для блока информации о заказе */
+#orderCreateModal .card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+#orderCreateModal .card-body {
+    padding: 1rem;
+}
+
+#order-product-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #26335F;
+}
+
+#order-total {
+    color: #C1221C;
+    font-size: 1.1rem;
+}

@@ -1,4 +1,3 @@
-<!-- Модальное окно для формы -->
 <div class="modal fade" id="orderCreateModal" tabindex="-1" aria-labelledby="orderCreateModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,14 +7,35 @@
             </div>
             <form id="orderCreateForm" method="post" action="{% url 'create_order' %}">
                 {% csrf_token %}
-                <input type="hidden" name="product_id" id="modalProductId">
-                <input type="hidden" name="quantity" id="modalQuantity">
+                <input type="hidden" name="product_id" id="product_id">
+                <input type="hidden" name="quantity" id="quantity">
                 
                 <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="{{ form.name.id_for_label }}" class="form-label">Ваше имя *</label>
-                            {{ form.name }}
+                    <!-- Блок информации о заказе -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title" id="order-product-name"></h6>
+                            <div class="d-flex justify-content-between">
+                                <span>Количество:</span>
+                                <span id="order-quantity"></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Цена за единицу:</span>
+                                <span id="order-unit-price"></span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Итого:</span>
+                                <span id="order-total"></span>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Поля формы -->
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Ваше имя *</label>
+                        {{ form.name }}
+                    </div>
                     <div class="mb-3">
                         <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон *</label>
                         {{ form.phone }}
@@ -32,7 +52,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     <button type="submit" class="btn btn-primary">
-                        Подтвердить заказ
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Оформить заказ
                     </button>
                 </div>
             </form>

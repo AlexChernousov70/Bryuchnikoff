@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ category.name }}{% endblock %}
 
@@ -50,60 +51,5 @@
 
 {% block scripts %}
 {{ block.super }}
-
-<script>
-$(document).ready(function() {
-    // Обработчики для кнопок +/-
-    $('.plus-btn, .minus-btn').on('click', function() {
-        const input = $(this).siblings('.quantity-input');
-        const step = parseInt(input.attr('step'));
-        let value = parseInt(input.val()) || 0;
-        
-        if ($(this).hasClass('plus-btn')) {
-            input.val(value + step);
-        } else if (value > step || (value > 1 && step === 1)) {
-            input.val(value - step);
-        }
-    });
-
-    // Инициализация модального окна
-    $('#orderCreateModal').on('show.bs.modal', function(event) {
-        const button = $(event.relatedTarget);
-        const productId = button.data('product-id') || $('#product_id').val();
-        const quantity = button.data('quantity') || $('#quantity').val();
-        
-        $('#product_id').val(productId);
-        $('#quantity').val(quantity);
-    });
-
-    // Обработка формы
-    $('#orderCreateForm').submit(function(e) {
-        e.preventDefault();
-        const form = $(this);
-        const submitBtn = form.find('button[type="submit"]');
-        const spinner = submitBtn.find('.spinner-border');
-        
-        spinner.removeClass('d-none');
-        submitBtn.prop('disabled', true);
-        
-        $.ajax({
-            type: "POST",
-            url: form.attr('action'),
-            data: form.serialize(),
-            success: function(response) {
-                $('#orderCreateModal').modal('hide');
-                alert('Заказ успешно оформлен!');
-                form.trigger("reset");
-            },
-            error: function(xhr) {
-                alert('Ошибка: ' + (xhr.responseJSON?.error || 'Ошибка сервера'));
-            },
-            complete: function() {
-                spinner.addClass('d-none');
-                submitBtn.prop('disabled', false);
-            }
-        });
-    });
-});
-</script>
+<script src="{% static 'js/orders.js' %}"></script>
 {% endblock %}

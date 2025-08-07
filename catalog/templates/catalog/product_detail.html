@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ product.name }}{% endblock %}
 
@@ -48,28 +49,13 @@
                         <p>{{ product.article }}</p>
                     </div>
 
-                    {% if product.in_stock %}
-                    <form class="add-to-cart-form">
-                        <div class="input-group mb-3" style="max-width: 200px;">
-                            <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
-                            <input type="number" 
-                                class="form-control text-center quantity-input" 
-                                value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
-                                min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
-                                step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
-                                data-price="{{ product.price }}"
-                                data-product-id="{{ product.id }}">
-                            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
-                        </div>
                     <button type="button" 
-                            class="btn btn-primary w-100 order-btn" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#orderCreateModal"
-                            onclick="prepareOrderModal('{{ product.id }}', $('.quantity-input').val())">
+                        class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#orderCreateModal"
+                        data-product-id="{{ product.id }}">
                         <i class="bi bi-cart3 me-2"></i>Оформить заказ
                     </button>
-                    </form>
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -107,127 +93,12 @@
     </div>
 </div>
 
-<!-- Модальное окно заказа (включаем из order_call.html) -->
-
-
-<!-- Модальное окно для отзыва -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reviewModalLabel">Оставить отзыв</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post" action="{% url 'product_detail' product.category.slug product.id %}">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="reviewName" class="form-label">Ваше имя</label>
-                        <input type="text" class="form-control" id="reviewName" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="reviewText" class="form-label">Текст отзыва</label>
-                        <textarea class="form-control" id="reviewText" name="text" rows="4" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">Отправить</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% include 'catalog/includes/review_create.html' %}
 {% include 'catalog/includes/order_call.html' %}
 {% include 'catalog/includes/order_create.html' %}
 {% endblock %}
 
 {% block scripts %}
 {{ block.super }}
-
-<script>
-$(document).ready(function() {
-    $('.plus-btn').click(function() {
-        let input = $(this).siblings('.quantity-input');
-        let step = parseInt(input.attr('step'));
-        let value = parseInt(input.val());
-        input.val(value + step);
-    });
-
-    $('.minus-btn').click(function() {
-        let input = $(this).siblings('.quantity-input');
-        let step = parseInt(input.attr('step'));
-        let value = parseInt(input.val());
-        if (value > step || (value > 1 && step === 1)) {
-            input.val(value - step);
-        }
-    });
-
-    $('.quantity-input').change(function() {
-        let step = parseInt($(this).attr('step'));
-        let min = parseInt($(this).attr('min'));
-        let value = parseInt($(this).val());
-        
-        if (isNaN(value) || value < min) {
-            $(this).val(min);
-        } else if (value % step !== 0) {
-            let rounded = Math.round(value / step) * step;
-            $(this).val(rounded < min ? min : rounded);
-        }
-    });
-});
-</script>
-
-<script>
-function prepareOrderModal(productId, quantity) {
-    $('#product_id').val(productId);
-    $('#quantity').val(quantity);
-}
-
-$(document).ready(function() {
-    $('#orderCreateForm').submit(function(e) {
-        e.preventDefault();
-        const form = $(this);
-        const submitBtn = form.find('button[type="submit"]');
-        const spinner = submitBtn.find('.spinner-border');
-        
-        spinner.removeClass('d-none');
-        submitBtn.prop('disabled', true);
-        
-        $.ajax({
-            type: "POST",
-            url: form.attr('action'),
-            data: form.serialize(),
-            success: function(response) {
-                $('#orderCreateModal').modal('hide');
-                showSuccessAlert('Ваш заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.');
-                form.trigger("reset");
-            },
-            error: function(xhr) {
-                showErrorAlert('Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже.');
-            },
-            complete: function() {
-                spinner.addClass('d-none');
-                submitBtn.prop('disabled', false);
-            }
-        });
-    });
-});
-
-function showSuccessAlert(message) {
-    const alert = `<div class="alert alert-success alert-dismissible fade show" role="alert">
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>`;
-    $('.container.mt-4').prepend(alert);
-}
-
-function showErrorAlert(message) {
-    const alert = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>`;
-    $('.container.mt-4').prepend(alert);
-}
-</script>
+<script src="{% static 'js/orders.js' %}"></script>
 {% endblock %}

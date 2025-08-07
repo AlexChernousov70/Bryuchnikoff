@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     };
 
+    // Закрытие toast по клику
+    toastContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-close')) {
+            const toast = e.target.closest('.toast');
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }
+    });
+
     // Обработка формы
     const form = document.getElementById('orderCallForm');
     if (form) {
@@ -125,13 +134,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // Закрытие toast по клику
-    toastContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('btn-close')) {
-            const toast = e.target.closest('.toast');
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }
-    });
 });
