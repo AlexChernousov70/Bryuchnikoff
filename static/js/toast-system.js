@@ -1,13 +1,11 @@
 (function() {
     'use strict';
 
-    // Проверка загрузки Bootstrap
     if (typeof bootstrap === 'undefined') {
         console.error('Toast: Bootstrap не загружен!');
         return;
     }
 
-    // Создаем контейнер для toast-уведомлений
     const initToastContainer = () => {
         let container = document.getElementById('toast-container');
         if (!container) {
@@ -20,48 +18,38 @@
         return container;
     };
 
-    // Конфигурация стилей для уведомлений
     const TOAST_CONFIG = {
         success: {
             icon: 'bi-check-circle-fill',
             bgClass: 'bg-success',
-            title: 'Успешно',
+            title: 'Успех', // Русский текст
             delay: 4000
         },
         error: {
             icon: 'bi-exclamation-triangle-fill',
             bgClass: 'bg-danger',
-            title: 'Ошибка',
+            title: 'Ошибка', // Русский текст
             delay: 6000
-        },
-        warning: {
-            icon: 'bi-exclamation-circle-fill',
-            bgClass: 'bg-warning text-dark',
-            title: 'Внимание',
-            delay: 5000
         }
     };
 
-    // Единая функция показа уведомлений
     window.showToast = function(message, type = 'success') {
         const container = initToastContainer();
         const config = TOAST_CONFIG[type] || TOAST_CONFIG.success;
 
-        const toastId = 'toast-' + Date.now();
         const toastHTML = `
-        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header ${config.bgClass} text-white border-0">
-                <i class="bi ${config.icon} me-2"></i>
-                <strong class="me-auto">${config.title}</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                ${message}
+        <div class="toast show align-items-center text-white ${config.bgClass} border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi ${config.icon} me-2"></i>
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>`;
 
-        container.insertAdjacentHTML('beforeend', toastHTML);
-        const toastElement = document.getElementById(toastId);
+        container.insertAdjacentHTML('afterbegin', toastHTML);
+        const toastElement = container.querySelector('.toast:first-child');
         const toast = new bootstrap.Toast(toastElement, {
             autohide: true,
             delay: config.delay
@@ -73,6 +61,5 @@
         });
     };
 
-    // Инициализация при загрузке
     document.addEventListener('DOMContentLoaded', initToastContainer);
 })();
