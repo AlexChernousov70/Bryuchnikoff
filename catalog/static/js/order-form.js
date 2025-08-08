@@ -5,33 +5,10 @@
         $('#orderCreateForm').on('submit', handleOrderSubmit);
     }
 
-    function handleOrderSubmit(e) {
-        e.preventDefault();
-        const $form = $(this);
-        const $submitBtn = $form.find('button[type="submit"]');
-        const $spinner = $submitBtn.find('.spinner-border');
-        
-        toggleFormLoading($submitBtn, $spinner, true);
-        
-        $.ajax({
-            type: "POST",
-            url: $form.attr('action'),
-            data: $form.serialize(),
-            headers: {
-                'X-CSRFToken': getCSRFToken()
-            },
-            success: function(response) {
-                handleSuccess(response, $form);
-            },
-            error: handleError,
-            complete: function() {
-                toggleFormLoading($submitBtn, $spinner, false);
-            }
-        });
-    }
-
     function getCSRFToken() {
-        return $('input[name="csrfmiddlewaretoken"]').val();
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+        console.log('CSRF Token:', token); // Добавьте лог
+        return token;
     }
 
     function toggleFormLoading($submitBtn, $spinner, isLoading) {
@@ -50,6 +27,50 @@
                     xhr.responseJSON?.errors || 
                     'Ошибка сервера';
         showAlert('danger', errorMsg);
+    }
+
+    function handleOrderSubmit(e) {
+        e.preventDefault();
+        const $form = $(this);
+        console.log('Form data:', $(this).serialize());
+
+        // 1. Проверка CSRF токена
+        if (!getCSRFToken()) {
+            showAlert('danger', 'Ошибка безопасности. Пожалуйста, перезагрузите страницу.');
+            return;
+        }
+
+        // 2. Проверка product_id перед отправкой
+        const productId = $('#product_id').val();
+        console.log('Отправляемый product_id:', productId); // Для отладки
+        
+        if (!productId) {
+            showAlert('danger', 'Не выбран товар для заказа');
+            return;
+        }
+
+        const $submitBtn = $form.find('button[type="submit"]');
+        const $spinner = $submitBtn.find('.spinner-border');
+        
+        toggleFormLoading($submitBtn, $spinner, true);
+        
+        // 3. Отправка данных
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            headers: {
+                'X-CSRFToken': getCSRFToken(),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                handleSuccess(response, $form);
+            },
+            error: handleError,
+            complete: function() {
+                toggleFormLoading($submitBtn, $spinner, false);
+            }
+        });
     }
 
     $(document).ready(initOrderForm);

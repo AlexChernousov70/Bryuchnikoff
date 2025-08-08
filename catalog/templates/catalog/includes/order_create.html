@@ -7,8 +7,8 @@
             </div>
             <form id="orderCreateForm" method="post" action="{% url 'create_order' %}">
                 {% csrf_token %}
-                <input type="hidden" name="product_id" id="product_id">
-                <input type="hidden" name="quantity" id="quantity">
+                <input type="hidden" name="product_id" id="product_id" value="">
+                <input type="hidden" name="quantity" id="quantity" value="">
                 
                 <div class="modal-body">
                     <!-- Блок информации о заказе -->

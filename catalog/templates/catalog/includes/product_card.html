@@ -45,8 +45,7 @@
             class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
             data-bs-toggle="modal" 
             data-bs-target="#orderCreateModal"
-            data-product-id="{{ product.id }}"
-            data-quantity-selector="$(this).prev('.input-group').find('.quantity-input').val()">
+            data-product-id="{{ product.id }}">
             <i class="bi bi-cart3 me-2"></i>Оформить заказ
         </button>
     </div>

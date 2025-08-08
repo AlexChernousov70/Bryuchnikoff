@@ -51,7 +51,7 @@ def send_lead_notification(sender, instance, created, **kwargs):
     f"<b>Сообщение:</b> {html.escape(instance.message) if instance.message else 'не указано'}\n"
     f"<b>Дата создания:</b> {created_at}\n\n"
     "#обратный_звонок"
-)
+    )
         run(send_telegram_message(
             TELEGRAM_BOT_API_KEY,
             TELEGRAM_USER_ID,

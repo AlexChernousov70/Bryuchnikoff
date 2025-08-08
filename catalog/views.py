@@ -8,7 +8,6 @@ from django.http import JsonResponse, Http404
 from django.core.exceptions import ValidationError
 import json
 
-
 class LandingPageView(TemplateView):
     """
     Классовое представление главной страницы, с возможностью открыть форму в модальном окне и просмотром категорий товаров в каталоге, подгружаемую из БД
@@ -105,42 +104,69 @@ class ProductListDetail(DetailView):
         context['categories'] = Category.objects.all()
         return context
 
+from django.conf import settings
+
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderCreateForm
-    http_method_names = ['post']  # Разрешаем только POST
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
+    http_method_names = ['post']  # Разрешаем только POST-запросы
 
     def form_valid(self, form):
+        """
+        Обработка валидной формы с проверкой reCAPTCHA и товара
+        """
+        # Проверка reCAPTCHA
+        captcha_response = self.request.POST.get('g-recaptcha-response')
+        if not captcha_response:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'captcha': ['Пожалуйста, пройдите проверку reCAPTCHA']}
+                }, status=400)
+            form.add_error(None, 'Пожалуйста, пройдите проверку reCAPTCHA')
+            return self.form_invalid(form)
+
+        # Проверка товара
         try:
             product = Product.objects.get(
                 id=self.request.POST.get('product_id'),
                 in_stock=True
             )
-            order = form.save(commit=False)
-            order.product = product
-            order.quantity = int(self.request.POST.get('quantity', 1))
-            order.total = product.price * order.quantity
-            order.save()
-            
+        except Product.DoesNotExist:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Товар не найден или отсутствует в наличии'
+                }, status=400)
+            form.add_error(None, 'Товар не найден')
+            return self.form_invalid(form)
+
+        # Сохранение заказа
+        order = form.save(commit=False)
+        order.product = product
+        order.quantity = int(self.request.POST.get('quantity', 1))
+        order.total = product.price * order.quantity
+        order.save()
+
+        # Ответ для AJAX
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': True,
                 'message': 'Ваш заказ успешно оформлен!'
             })
-            
-        except Product.DoesNotExist:
-            return JsonResponse({
-                'success': False,
-                'error': 'Товар не найден или отсутствует в наличии'
-            }, status=400)
+
+        # Ответ для обычного POST-запроса
+        messages.success(self.request, 'Ваш заказ успешно оформлен!')
+        return super().form_valid(form)
 
     def form_invalid(self, form):
-        return JsonResponse({
-            'success': False,
-            'errors': form.errors
-        }, status=400)
+        """
+        Обработка невалидной формы
+        """
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            errors = form.errors.as_json()
+            return JsonResponse({
+                'success': False,
+                'errors': errors
+            }, status=400)
+        return super().form_invalid(form)
