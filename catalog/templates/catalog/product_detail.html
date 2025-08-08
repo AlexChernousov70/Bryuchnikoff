@@ -50,14 +50,7 @@
                         <p>{{ product.article }}</p>
                     </div>
 
-                    <!-- Блок заказа (полностью идентичный product_card.html) -->
                     <div class="card-footer bg-white border-top border-1 border-light-subtle mt-auto">
-                        <div class="d-flex justify-content-end align-items-center mb-3">
-                            <div class="text-end">
-                                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price|floatformat:2 }} ₽/{{ product.unit }}</div>
-                            </div>
-                        </div>
-                        
                         <div class="input-group mb-3">
                             <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
                             <input type="number" 

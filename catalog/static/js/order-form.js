@@ -25,8 +25,8 @@
         
         if (xhr.responseJSON) {
             errorMsg = xhr.responseJSON.error || 
-                      xhr.responseJSON.errors || 
-                      errorMsg;
+                    xhr.responseJSON.errors || 
+                    errorMsg;
         }
         
         showToast(errorMsg, 'error');

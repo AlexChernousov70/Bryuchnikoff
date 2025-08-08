@@ -29,11 +29,12 @@
             }
             
             // Получаем название товара
-            const productName = productCard.find('.card-title').text().trim();
+            const productName = productCard.find('.card-title, h1').first().text().trim();
             
-            // Получаем единицы измерения
-            const priceText = productCard.find('.h4').text();
-            const unit = priceText.split('/')[1]?.trim() || 'шт';
+            // Получаем единицы измерения - ИЗМЕНЕНИЕ ЗДЕСЬ
+            // Находим элемент с ценой и берем только часть после /
+            const priceElement = productCard.find('.h4');
+            const unit = priceElement.text().split('/')[1]?.trim() || 'шт';
             
             // Получаем количество
             const quantity = parseInt(quantityInput.val()) || 1;
@@ -51,16 +52,16 @@
 
     function updateOrderForm(product) {
         // Форматируем с двумя знаками после запятой
-        const formattedUnitPrice = product.unitPrice.toFixed(2);
-        const total = (product.unitPrice * product.quantity).toFixed(2);
+        const formattedUnitPrice = product.unitPrice.toFixed(2).replace('.', ',');
+        const total = (product.unitPrice * product.quantity).toFixed(2).replace('.', ',');
         
-        // Устанавливаем значения в скрытые поля - ОБРАТИТЕ ВНИМАНИЕ НА ЭТИ СТРОКИ
-        $('#orderCreateModal #product_id').val(product.id); // Явно указываем модальное окно
+        // Устанавливаем значения в скрытые поля
+        $('#orderCreateModal #product_id').val(product.id);
         $('#orderCreateModal #quantity').val(product.quantity);
         
         // Обновляем отображаемую информацию
         $('#order-product-name').text(product.name);
-        $('#order-quantity').text(`${product.quantity} ${product.unit}`);
+        $('#order-quantity').text(`${product.quantity} ${product.unit}`); // Только количество и единицы измерения
         $('#order-unit-price').text(`${formattedUnitPrice} ₽/${product.unit}`);
         $('#order-total').text(`${total} ₽`);
     }
