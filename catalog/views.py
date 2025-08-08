@@ -22,12 +22,10 @@ class LandingPageView(TemplateView):
         return context
 
 class OrderCallBackCreateView(CreateView):
-    """
-    Классовое представление, позволяющее создавать лидов - тех, кто заинтересовался продуктам и сделал заказ звонка (обратную связь)
-    """
     model = OrderCallBack
     form_class = OrderCallBackForm
     template_name = 'catalog/order_call.html'
+    success_url = '/'
 
     def form_valid(self, form):
         """
@@ -110,58 +108,39 @@ class ProductListDetail(DetailView):
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderCreateForm
-    template_name = 'catalog/order_create.html'  # Укажите ваш шаблон
-    
-    def form_valid(self, form):
-        # Проверка reCAPTCHA
-        captcha_response = self.request.POST.get('g-recaptcha-response')
-        if not captcha_response:
-            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'errors': {'captcha': ['Пожалуйста, пройдите проверку reCAPTCHA']}
-                }, status=400)
-            form.add_error(None, 'Пожалуйста, пройдите проверку reCAPTCHA')
-            return self.form_invalid(form)
-        
-        try:
-            data = json.loads(self.request.body) if self.request.body else self.request.POST
-            product = Product.objects.get(
-                id=data.get('product_id'), 
-                in_stock=True
-            )
-            
-            order = form.save(commit=False)
-            order.total = product.price * int(data.get('quantity', 1))
-            order.save()
-            
-            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Ваш заказ успешно оформлен!'
-                })
-            
-            messages.success(self.request, 'Ваш заказ успешно оформлен!')
-            return super().form_valid(form)
-            
-        except Product.DoesNotExist:
-            error = 'Товар не найден или отсутствует в наличии'
-        except Exception as e:
-            error = str(e)
-            
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'error': error
-            }, status=400)
-        
-        form.add_error(None, error)
+    http_method_names = ['post']  # Разрешаем только POST
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
         return self.form_invalid(form)
 
-    def form_invalid(self, form):
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    def form_valid(self, form):
+        try:
+            product = Product.objects.get(
+                id=self.request.POST.get('product_id'),
+                in_stock=True
+            )
+            order = form.save(commit=False)
+            order.product = product
+            order.quantity = int(self.request.POST.get('quantity', 1))
+            order.total = product.price * order.quantity
+            order.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Ваш заказ успешно оформлен!'
+            })
+            
+        except Product.DoesNotExist:
             return JsonResponse({
                 'success': False,
-                'errors': form.errors
+                'error': 'Товар не найден или отсутствует в наличии'
             }, status=400)
-        return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        return JsonResponse({
+            'success': False,
+            'errors': form.errors
+        }, status=400)
