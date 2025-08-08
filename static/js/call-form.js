@@ -61,7 +61,7 @@
 
         function handleSuccessResponse(data, $form) {
             if (data.success) {
-                showToast(data.message || 'Ваша заявка принята! Мы скоро с вами свяжемся.');
+                showToast(data.message || 'Ваша заявка принята! Мы скоро с вами свяжемся.', 'success');
                 $('#orderCallModal').modal('hide');
                 $form[0].reset();
             } else {
@@ -84,7 +84,7 @@
             } else if (xhr.statusText) {
                 errorMessage = xhr.statusText;
             }
-            
+
             showToast(errorMessage, 'error');
         }
     });

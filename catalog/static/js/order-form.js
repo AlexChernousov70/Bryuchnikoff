@@ -6,9 +6,7 @@
     }
 
     function getCSRFToken() {
-        const token = $('input[name="csrfmiddlewaretoken"]').val();
-        console.log('CSRF Token:', token); // Добавьте лог
-        return token;
+        return $('input[name="csrfmiddlewaretoken"]').val();
     }
 
     function toggleFormLoading($submitBtn, $spinner, isLoading) {
@@ -18,34 +16,36 @@
 
     function handleSuccess(response, $form) {
         $('#orderCreateModal').modal('hide');
-        showAlert('success', response.message || 'Заказ успешно оформлен!');
+        showToast(response.message || 'Заказ успешно оформлен!', 'success');
         $form.trigger('reset');
     }
 
     function handleError(xhr) {
-        const errorMsg = xhr.responseJSON?.error || 
-                    xhr.responseJSON?.errors || 
-                    'Ошибка сервера';
-        showAlert('danger', errorMsg);
+        let errorMsg = 'Ошибка сервера';
+        
+        if (xhr.responseJSON) {
+            errorMsg = xhr.responseJSON.error || 
+                      xhr.responseJSON.errors || 
+                      errorMsg;
+        }
+        
+        showToast(errorMsg, 'error');
     }
 
     function handleOrderSubmit(e) {
         e.preventDefault();
         const $form = $(this);
-        console.log('Form data:', $(this).serialize());
 
-        // 1. Проверка CSRF токена
+        // Проверка CSRF токена
         if (!getCSRFToken()) {
-            showAlert('danger', 'Ошибка безопасности. Пожалуйста, перезагрузите страницу.');
+            showToast('Ошибка безопасности. Пожалуйста, перезагрузите страницу.', 'error');
             return;
         }
 
-        // 2. Проверка product_id перед отправкой
+        // Проверка product_id
         const productId = $('#product_id').val();
-        console.log('Отправляемый product_id:', productId); // Для отладки
-        
         if (!productId) {
-            showAlert('danger', 'Не выбран товар для заказа');
+            showToast('Не выбран товар для заказа', 'error');
             return;
         }
 
@@ -54,7 +54,6 @@
         
         toggleFormLoading($submitBtn, $spinner, true);
         
-        // 3. Отправка данных
         $.ajax({
             type: "POST",
             url: $form.attr('action'),
