@@ -81,7 +81,7 @@ class ProductListView(ListView):
         context["form"] = OrderCallBackForm()
         return context
 
-class ProductListDetail(DetailView):
+class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
@@ -103,8 +103,6 @@ class ProductListDetail(DetailView):
         context['category'] = self.object.category
         context['categories'] = Category.objects.all()
         return context
-
-from django.conf import settings
 
 class OrderCreateView(CreateView):
     model = Order

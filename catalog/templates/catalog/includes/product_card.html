@@ -36,7 +36,7 @@
                 value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
                 min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
                 step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
-                data-price="{{ product.price|stringformat:"f" }}"
+                data-price="{{ product.price|stringformat:'f' }}"
                 data-product-id="{{ product.id }}">
             <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
         </div>

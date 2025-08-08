@@ -130,3 +130,12 @@ a.text-decoration-none:hover h5 {
     color: #C1221C;
     font-size: 1.1rem;
 }
+
+.no-hover {
+    transition: none !important;
+    transform: none !important;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}

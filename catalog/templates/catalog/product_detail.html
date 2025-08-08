@@ -12,26 +12,27 @@
         </ol>
     </nav>
 
-    <div class="row">
-        <!-- Изображение товара -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" 
-                    class="card-img-top img-fluid" 
-                    alt="{{ product.name }}">
-                {% endif %}
+    <!-- Основная карточка товара (аналогичная product_card.html) -->
+    <div class="card shadow-sm border-0 product-card">
+        <div class="row g-0">
+            <!-- Колонка с изображением -->
+            <div class="col-lg-6">
+                <div class="ratio ratio-1x1 p-2 position-relative bg-white">
+                    <img src="{{ product.image.url }}" 
+                        class="w-100 h-100 object-fit-contain border border-1 border-light-subtle rounded 
+                                {% if not product.in_stock %}opacity-50{% endif %}" 
+                        alt="{{ product.name }}"
+                        style="background-color: white;">
+                </div>
             </div>
-        </div>
 
-        <!-- Информация о товаре -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
+            <!-- Колонка с информацией -->
+            <div class="col-lg-6">
+                <div class="card-body h-100 d-flex flex-column">
                     <h1 class="h2 mb-3" style="color: #26335F;">{{ product.name }}</h1>
                     
                     <div class="d-flex align-items-center mb-3">
-                        <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price }} ₽/{{ product.unit }}</div>
+                        <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price|floatformat:2 }} ₽/{{ product.unit }}</div>
                         {% if product.in_stock %}
                             <span class="badge bg-success">В наличии</span>
                         {% else %}
@@ -49,19 +50,40 @@
                         <p>{{ product.article }}</p>
                     </div>
 
-                    <button type="button" 
-                        class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#orderCreateModal"
-                        data-product-id="{{ product.id }}">
-                        <i class="bi bi-cart3 me-2"></i>Оформить заказ
-                    </button>
+                    <!-- Блок заказа (полностью идентичный product_card.html) -->
+                    <div class="card-footer bg-white border-top border-1 border-light-subtle mt-auto">
+                        <div class="d-flex justify-content-end align-items-center mb-3">
+                            <div class="text-end">
+                                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price|floatformat:2 }} ₽/{{ product.unit }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary minus-btn" type="button">-</button>
+                            <input type="number" 
+                                class="form-control text-center quantity-input" 
+                                value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                                min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
+                                step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
+                                data-price="{{ product.price|stringformat:'f' }}"
+                                data-product-id="{{ product.id }}">
+                            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+                        </div>
+                        
+                        <button type="button" 
+                            class="btn w-100 order-btn {% if not product.in_stock %}disabled{% endif %}"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#orderCreateModal"
+                            data-product-id="{{ product.id }}">
+                            <i class="bi bi-cart3 me-2"></i>Оформить заказ
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Отзывы -->
+    <!-- Блок с отзывами (оставляем без изменений) -->
     <div class="row mt-4">
         <div class="col-12">
             <div class="card shadow-sm border-0">
@@ -96,6 +118,7 @@
 {% include 'catalog/includes/review_create.html' %}
 {% include 'catalog/includes/order_call.html' %}
 {% include 'catalog/includes/order_create.html' %}
+
 {% endblock %}
 
 {% block scripts %}
