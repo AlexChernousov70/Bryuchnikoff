@@ -5,7 +5,7 @@
                 <h5 class="modal-title" id="orderCreateModalLabel">Оформление заказа</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{% url 'catalog:create_order' %}" method="post" id="orderCreateForm">
+            <form action="{% url 'catalog:order_create' %}" method="post" id="orderCreateForm">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" id="product_id" value="">
                 <input type="hidden" name="quantity" id="quantity" value="">
