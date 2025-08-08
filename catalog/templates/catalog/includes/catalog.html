@@ -2,7 +2,7 @@
     <h2 class="mb-4 text-left" style="color: #26335F;">Наш каталог</h2>
     <div class="list-group">
         {% for category in categories %}
-        <a href="{% url 'product_list' category.slug %}" 
+        <a href="{% url 'catalog:product_list' category.slug %}" 
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
             style="border-left: 4px solid #C1221C;">
             <span style="color: #26335F;">{{ category.name }}</span>

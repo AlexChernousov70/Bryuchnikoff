@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'product_list' product.category.slug %}" style="color: #26335F;">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalog:product_list' product.category.slug %}" style="color: #26335F;">{{ product.category.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
         </ol>
     </nav>

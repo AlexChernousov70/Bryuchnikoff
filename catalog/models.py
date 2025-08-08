@@ -60,7 +60,7 @@ class Product(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('product_detail', kwargs={
+        return reverse('catalog:product_detail', kwargs={
             'slug': self.category.slug,  # slug категории
             'product_id': self.id        # ID товара
         })

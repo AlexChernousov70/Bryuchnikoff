@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", LandingPageView.as_view(), name="landing"),
     # Подключаем маршруты из приложения catalog
-    path('catalog/', include('catalog.urls')),
+    path('catalog/', include('catalog.urls', namespace='catalog')),
 ]
 
 # для работы с изображениями при разработке
