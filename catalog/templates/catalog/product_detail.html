@@ -76,42 +76,48 @@
         </div>
     </div>
 
-    <!-- Блок с отзывами (оставляем без изменений) -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h2 class="h4 mb-4" style="color: #26335F;">Отзывы</h2>
-                    
-                    {% if product.reviews.all %}
-                        {% for review in product.reviews.all %}
-                            {% if review.is_public %}
-                            <div class="mb-4 pb-3 border-bottom">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <h5 class="mb-0">{{ review.name }}</h5>
-                                    <small class="text-muted">{{ review.created_at|date:"d.m.Y" }}</small>
-                                </div>
-                                <p>{{ review.text }}</p>
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-muted">Пока нет отзывов об этом товаре.</p>
-                    {% endif %}
-
-                    <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                        Оставить отзыв
+<!-- Блок с отзывами -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0" style="color: #26335F;">Отзывы покупателей</h2>
+                    <button class="btn" 
+                            style="background-color: #C1221C; color: white;" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#reviewModal">
+                        <i class="bi bi-pencil-square me-2"></i>Оставить отзыв
                     </button>
                 </div>
+                
+                {% with published_reviews=product.reviews.filter.is_public|slice:":5" %}
+                    {% if published_reviews %}
+                        {% for review in published_reviews %}
+                        <div class="mb-4 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h5 class="mb-0">{{ review.name }}</h5>
+                                <small class="text-muted">{{ review.created_at|date:"d.m.Y" }}</small>
+                            </div>
+                            <p class="mb-0">{{ review.text }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-square-text display-5 text-muted mb-3"></i>
+                            <p class="text-muted">Пока нет отзывов об этом товаре.<br>Будьте первым!</p>
+                        </div>
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>
 </div>
 
-{% include 'catalog/includes/review_create.html' %}
+
 {% include 'catalog/includes/order_call.html' %}
 {% include 'catalog/includes/order_create.html' %}
-
+{% include 'catalog/includes/review_create.html' %}
 {% endblock %}
 
 {% block scripts %}
@@ -119,5 +125,5 @@
 <script src="{% static 'js/quantity-control.js' %}"></script>
 <script src="{% static 'js/order-modal.js' %}"></script>
 <script src="{% static 'js/order-form.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/reviews.js' %}"></script>
 {% endblock %}

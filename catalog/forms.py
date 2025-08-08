@@ -24,6 +24,8 @@ class OrderCreateForm(forms.ModelForm):
         }
 
 class ReviewForm(forms.ModelForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    
     class Meta:
         model = Review
         fields = ['name', 'text']

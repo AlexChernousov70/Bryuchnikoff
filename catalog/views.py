@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.views import View
-from .models import OrderCallBack, Category, Product, Order
-from .forms import OrderCallBackForm, OrderCreateForm
+from .models import OrderCallBack, Category, Product, Order, Review
+from .forms import OrderCallBackForm, OrderCreateForm, ReviewForm
 from django.contrib import messages
 from django.http import JsonResponse, Http404
 from django.core.exceptions import ValidationError
 import json
+from django.urls import reverse
+
 
 class LandingPageView(TemplateView):
     """
@@ -102,6 +104,8 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['category'] = self.object.category
         context['categories'] = Category.objects.all()
+        context['form'] = OrderCreateForm()
+        context['review_form'] = ReviewForm()
         return context
 
 class OrderCreateView(CreateView):
@@ -168,3 +172,37 @@ class OrderCreateView(CreateView):
                 'errors': errors
             }, status=400)
         return super().form_invalid(form)
+    
+class ReviewCreateView(CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'catalog/includes/review_create.html'
+    
+    def form_valid(self, form):
+        product = Product.objects.get(id=self.kwargs['product_id'])
+        review = form.save(commit=False)
+        review.product = product
+        review.save()
+        
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Спасибо за ваш отзыв! Он будет опубликован после проверки.'
+            })
+        
+        messages.success(self.request, 'Спасибо за ваш отзыв! Он будет опубликован после проверки.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors.get_json_data()
+            }, status=400)
+        return super().form_invalid(form)
+    
+    def get_success_url(self):
+        return reverse('catalog:product_detail', kwargs={
+            'slug': self.kwargs['slug'],
+            'product_id': self.kwargs['product_id']
+        })
