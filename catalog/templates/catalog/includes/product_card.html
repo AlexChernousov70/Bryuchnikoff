@@ -25,7 +25,7 @@
     <div class="card-footer bg-white border-top border-1 border-light-subtle">
         <div class="d-flex justify-content-end align-items-center mb-3">
             <div class="text-end">
-                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price }} ₽/{{ product.unit }}</div>
+                <div class="h4 mb-0 fw-bold" style="color: #C1221C;">{{ product.price|floatformat:2 }} ₽/{{ product.unit }}</div>
             </div>
         </div>
         
@@ -36,7 +36,7 @@
                 value="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
                 min="{% if product.bulk_only %}1000{% else %}1{% endif %}" 
                 step="{% if product.bulk_only %}1000{% else %}1{% endif %}"
-                data-price="{{ product.price }}"
+                data-price="{{ product.price|stringformat:"f" }}"
                 data-product-id="{{ product.id }}">
             <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
         </div>
