@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitButton = form.querySelector('button[type="submit"]');
         const spinner = submitButton.querySelector('.spinner-border');
         
-        // Показываем индикатор загрузки
         submitButton.disabled = true;
         spinner.classList.remove('d-none');
 
@@ -27,18 +26,25 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (data.success) {
-                // Показываем toast-уведомление
                 showToast(data.message, 'success');
+                form.reset();
                 
-                // Закрываем модальное окно
                 const modal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
                 if (modal) modal.hide();
                 
-                // Очищаем форму
-                form.reset();
-                
-                // Можно обновить список отзывов
-                location.reload(); // или добавить отзыв динамически
+                if (data.review) {
+                    const reviewsList = document.getElementById('reviewsList');
+                    if (reviewsList) {
+                        const newReview = document.createElement('div');
+                        newReview.className = 'review-item mb-3 p-3 border rounded';
+                        newReview.innerHTML = `
+                            <div class="fw-bold">${data.review.name}</div>
+                            <div class="text-muted small">${new Date(data.review.date).toLocaleString()}</div>
+                            <div class="mt-2">${data.review.text}</div>
+                        `;
+                        reviewsList.prepend(newReview);
+                    }
+                }
             } else {
                 showToast('Пожалуйста, исправьте ошибки в форме', 'error');
                 handleFormErrors(form, data.errors);
@@ -49,14 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast('Произошла ошибка при отправке отзыва', 'error');
         })
         .finally(() => {
-            // Восстанавливаем кнопку
             submitButton.disabled = false;
             spinner.classList.add('d-none');
         });
     });
 
     function handleFormErrors(form, errors) {
-        // Сбрасываем предыдущие ошибки
         form.querySelectorAll('.is-invalid').forEach(el => {
             el.classList.remove('is-invalid');
         });
@@ -64,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
             el.textContent = '';
         });
 
-        // Показываем новые ошибки
         for (const field in errors) {
             const input = form.querySelector(`[name="${field}"]`);
             if (input) {
