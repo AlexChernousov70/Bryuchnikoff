@@ -40,7 +40,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-1">
                         <h3 class="h5 mb-2" style="color: #26335F;">Описание</h3>
                         <p>{{ product.description }}</p>
                     </div>
@@ -91,7 +91,6 @@
                     </button>
                 </div>
                 
-                {% with published_reviews=product.reviews.filter.is_public|slice:":5" %}
                     {% if published_reviews %}
                         {% for review in published_reviews %}
                         <div class="mb-4 pb-3 border-bottom">
@@ -108,7 +107,6 @@
                             <p class="text-muted">Пока нет отзывов об этом товаре.<br>Будьте первым!</p>
                         </div>
                     {% endif %}
-                {% endwith %}
             </div>
         </div>
     </div>

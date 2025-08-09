@@ -106,6 +106,7 @@ class ProductDetailView(DetailView):
         context['categories'] = Category.objects.all()
         context['form'] = OrderCreateForm()
         context['review_form'] = ReviewForm()
+        context['published_reviews'] = Review.objects.filter(is_public=True)
         return context
 
 class OrderCreateView(CreateView):

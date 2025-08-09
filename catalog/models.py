@@ -115,5 +115,9 @@ class OrderCallBack(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     is_processed = models.BooleanField(default=False, verbose_name="Обработан")
 
+    class Meta:
+        verbose_name = "Заказ на обраный звонок"
+        verbose_name_plural = "Заказы на обраный звонок"
+        ordering = ['-created_at']
     def __str__(self):
         return f"{self.name} ({self.phone})"
