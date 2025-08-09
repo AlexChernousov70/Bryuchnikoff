@@ -28,21 +28,6 @@ def send_lead_notification(sender, instance, created, **kwargs):
         # Получаем чистый номер (только цифры и +)
         clean_phone = '+7' + re.sub(r'[^\d]', '', instance.phone)[1:]
 
-        # Сохраняем оригинальное форматирование для отображения
-        display_phone = instance.phone
-
-        # Создаём HTML-ссылку
-        phone_line = f'<a href="tel:{clean_phone}">{display_phone}</a>'
-        print(phone_line)
-        # Проверяем российский номер (11 цифр вместе с +7)
-        if clean_phone.startswith('+7') and len(clean_phone) == 12:
-            # Форматируем для отображения (сохраняем оригинальный формат)
-            display_phone = instance.phone
-            # Создаем кликабельную ссылку
-            phone_line = f'<a href="tel:{clean_phone}">{display_phone}</a>'
-        else:
-            phone_line = f'{instance.phone} (некорректный формат)'
-
         message = (
     "<b>📞 Заявка на обратный звонок</b>\n\n"
     f"<b>Имя:</b> {html.escape(instance.name)}\n"
@@ -62,7 +47,7 @@ def send_lead_notification(sender, instance, created, **kwargs):
     except Exception as e:
         logger.error(f"Ошибка при отправке: {e}", exc_info=True)
 
-@receiver(post_save, sender=Order)  # Убедитесь, что Order импортирована из .models
+@receiver(post_save, sender=Order)
 def send_order_notification(sender, instance, created, **kwargs):
     if not created:
         return
@@ -75,7 +60,7 @@ def send_order_notification(sender, instance, created, **kwargs):
         clean_phone = '+7' + re.sub(r'[^\d]', '', instance.phone)[1:]
         
         # Получаем информацию о товаре
-        product = instance.product  # Предполагая, что у Order есть связь с Product
+        product = instance.product
         product_info = f"{product.name} ({product.price}₽/{product.unit})"
         
         message = (
