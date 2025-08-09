@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'catalog:product_list' product.category.slug %}" style="color: #26335F;">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalog:product_list' product.category.slug %}" class="text-primary-dark">{{ product.category.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
         </ol>
     </nav>
@@ -29,7 +29,7 @@
             <!-- Колонка с информацией -->
             <div class="col-lg-6">
                 <div class="card-body h-100 d-flex flex-column">
-                    <h1 class="h2 mb-3" style="color: #26335F;">{{ product.name }}</h1>
+                    <h1 class="h2 mb-3 text-primary-dark">{{ product.name }}</h1>
                     
                     <div class="d-flex align-items-center mb-3">
                         <div class="h4 mb-0 fw-bold me-3" style="color: #C1221C;">{{ product.price|floatformat:2 }} ₽/{{ product.unit }}</div>
@@ -41,12 +41,12 @@
                     </div>
 
                     <div class="mb-1">
-                        <h3 class="h5 mb-2" style="color: #26335F;">Описание</h3>
+                        <h3 class="h5 mb-2 text-primary-dark">Описание</h3>
                         <p>{{ product.description }}</p>
                     </div>
 
                     <div class="mb-4">
-                        <h3 class="h5 mb-2" style="color: #26335F;">Артикул:</h3>
+                        <h3 class="h5 mb-2 text-primary-dark">Артикул:</h3>
                         <p>{{ product.article }}</p>
                     </div>
 
@@ -82,7 +82,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="h4 mb-0" style="color: #26335F;">Отзывы покупателей</h2>
+                    <h2 class="h4 mb-0 text-primary-dark">Отзывы покупателей</h2>
                     <button class="btn" 
                             style="background-color: #C1221C; color: white;" 
                             data-bs-toggle="modal" 

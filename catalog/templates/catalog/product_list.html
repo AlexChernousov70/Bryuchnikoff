@@ -11,7 +11,7 @@
         <div class="col-lg-3 col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                    <h2 class="h5 mb-0" style="color: #26335F;">Каталог</h2>
+                    <h2 class="h5 mb-0 text-primary-dark">Каталог</h2>
                 </div>
                 <div class="list-group list-group-flush">
                     {% for cat in categories %}
@@ -27,7 +27,7 @@
         </div>
 
         <div class="col-lg-9 col-md-8">
-            <h1 class="h2 mb-4" style="color: #26335F;">{{ category.name }}</h1>
+            <h1 class="h2 mb-4 text-primary-dark">{{ category.name }}</h1>
 
             {% if products %}
                 <div class="row g-4">
@@ -54,5 +54,4 @@
 <script src="{% static 'js/quantity-control.js' %}"></script>
 <script src="{% static 'js/order-modal.js' %}"></script>
 <script src="{% static 'js/order-form.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

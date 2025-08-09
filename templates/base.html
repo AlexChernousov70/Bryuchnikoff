@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Магазин фурнитуры БрючникоФФ">
-    <meta name="keywords" content="фурнитура, мебельная фурнитура, Москва">
+    <meta name="keywords" content="фурнитура для одежды, Москва, брючные крючки, ручные прессы для установки брючных крючков">
     <meta name="author" content="БрючникоФФ">
 
-    <!-- Фавиконка -->
     <link rel="icon" href="{% static 'images/favicon.png' %}">
 
     <title>{% block title %}БрючникоФФ - магазин фурнитуры{% endblock %}</title>
@@ -16,7 +15,6 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Иконки Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Предразгрузка для ускорения получения стилей -->
@@ -52,7 +50,7 @@
 
                 <!-- Контакты -->
                 <div class="d-flex align-items-center">
-                    <span class="me-3 d-none d-md-inline" style="color: #26335F;">Контакты:</span>
+                    <span class="me-3 d-none d-md-inline text-primary-dark">Контакты:</span>
                     <!-- Остальные иконки -->
                     <div class="d-flex align-items-center">
                         <!-- Телеграм -->
@@ -130,25 +128,25 @@
 
             <!-- Режим работы -->
             <div class="col-md-4 mb-4">
-                <h5 class="text-primary mb-3" style="color: #26335F !important;">Режим работы</h5>
-                <p class="mb-2" style="color: #26335F; line-height: 1.6;">Пн - Пт: 08:00 - 18:00</p>
-                <p class="mb-0" style="color: #26335F; line-height: 1.6;">Сб - Вс: выходные дни</p>
+                <h5 class="text-primary mb-3 text-primary-dark">Режим работы</h5>
+                <p class="mb-2 text-primary-dark" style="line-height: 1.6;">Пн - Пт: 08:00 - 18:00</p>
+                <p class="mb-0 text-primary-dark" style="line-height: 1.6;">Сб - Вс: выходные дни</p>
             </div>
             
             <!-- Контакты -->
             <div class="col-md-4 mb-4">
-                <h5 class="text-primary mb-3" style="color: #26335F !important;">Контакты</h5>
-                <p class="mb-2" style="color: #26335F; line-height: 1.6;">
+                <h5 class="text-primary mb-3 text-primary-dark">Контакты</h5>
+                <p class="mb-2 text-primary-dark" style="line-height: 1.6;">
                     <i class="bi bi-envelope-fill me-2 align-middle"></i>
-                    <a href="mailto:info@mosfurnitura.ru" class="text-decoration-none align-middle" style="color: #26335F;">info@mosfurnitura.ru</a>
+                    <a href="mailto:info@mosfurnitura.ru" class="text-decoration-none align-middle text-primary-dark">info@mosfurnitura.ru</a>
                 </p>
-                <p class="mb-2" style="color: #26335F; line-height: 1.6;">
+                <p class="mb-2 text-primary-dark" style="line-height: 1.6;">
                     <i class="bi bi-telephone-fill me-2 align-middle"></i>
-                    <a href="tel:+74951042707" class="text-decoration-none align-middle" style="color: #26335F;">+7 (495) 104-27-07</a>
+                    <a href="tel:+74951042707" class="text-decoration-none align-middle text-primary-dark">+7 (495) 104-27-07</a>
                 </p>
-                <p class="mb-3" style="color: #26335F; line-height: 1.6;">
+                <p class="mb-3 text-primary-dark" style="line-height: 1.6;">
                     <i class="bi bi-telephone-fill me-2 align-middle"></i>
-                    <a href="tel:+78007772707" class="text-decoration-none align-middle" style="color: #26335F;">+7 (800) 777-27-07</a>
+                    <a href="tel:+78007772707" class="text-decoration-none align-middle text-primary-dark">+7 (800) 777-27-07</a>
                 </p>
                 <div class="d-flex align-items-center mt-3">
                     <a href="https://t.me/kostumoff" target="_blank" 
@@ -174,8 +172,8 @@
             
             <!-- Адрес с картой -->
             <div class="col-md-4 mb-4">
-                <h5 class="text-primary mb-3" style="color: #26335F !important;">Адрес</h5>
-                <address class="mb-3" style="color: #26335F; line-height: 1.6;">
+                <h5 class="text-primary mb-3 text-primary-dark">Адрес</h5>
+                <address class="mb-3 text-primary-dark company-info" style="line-height: 1.6;">
                     г. Москва,<br>
                     2-й Магистральный тупик,<br>
                     д. 7А, строение 2, 2 этаж,<br>
@@ -209,7 +207,6 @@
 <script src="{% static 'js/toast-system.js' %}"></script>
 <script src="{% static 'js/phone-mask.js' %}"></script>
 <script src="{% static 'js/call-form.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
 {% block scripts %}{% endblock %}
 
 </body>

@@ -3,6 +3,7 @@
     line-height: 1.6;
 }
 
+/* Стили для модальных форм */
 .modal-body input, 
 .modal-body textarea {
     width: 100%;
@@ -25,7 +26,7 @@
     border-color: #dc3545 !important;
 }
 
-/* Добавьте в main.css */
+/* Стили для toast-уведомлений */
 #toastContainer {
     pointer-events: none;
 }
@@ -45,13 +46,37 @@
     opacity: 1 !important;
 }
 
+/* Анимации и эффекты */
 .hover-scale {
     transition: transform 0.3s ease;
 }
+
 .hover-scale:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
+
+/* Стили для карточек товаров */
+.card {
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card img {
+    background-color: white;
+    padding: 8px;
+    transition: transform 0.5s ease;
+}
+
+.card-img-top:hover {
+    transform: scale(1.05);
+}
+
 .product-image-wrapper {
     height: 250px;
     overflow: hidden;
@@ -59,42 +84,17 @@
     align-items: center;
     justify-content: center;
 }
+
+/* Стили для кнопок */
 .order-btn {
     background-color: #26335F;
     color: white;
     transition: all 0.3s ease;
 }
+
 .order-btn:hover {
     background-color: #1a284a;
     color: white;
-}
-.card-img-top {
-    transition: transform 0.5s ease;
-}
-.card-img-top:hover {
-    transform: scale(1.05);
-}
-a.text-decoration-none {
-    text-decoration: none !important;
-}
-a.text-decoration-none:hover h5 {
-    color: #1a284a !important;
-}
-
-.card {
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-}
-
-.card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease;
-}
-
-/* Для изображений с прозрачным фоном */
-.card img {
-    background-color: white;
-    padding: 8px;
 }
 
 .order-btn:disabled {
@@ -103,12 +103,16 @@ a.text-decoration-none:hover h5 {
     cursor: not-allowed;
 }
 
-.card img[style*="opacity"] {
-    opacity: 0.5 !important;
-    background-color: white !important;
+/* Ссылки */
+a.text-decoration-none {
+    text-decoration: none !important;
 }
 
-/* Стили для блока информации о заказе */
+a.text-decoration-none:hover h5 {
+    color: #1a284a !important;
+}
+
+/* Модальное окно заказа */
 #orderCreateModal .card {
     border: 1px solid #eee;
     border-radius: 8px;
@@ -131,6 +135,7 @@ a.text-decoration-none:hover h5 {
     font-size: 1.1rem;
 }
 
+/* Вспомогательные классы */
 .no-hover {
     transition: none !important;
     transform: none !important;
@@ -138,4 +143,12 @@ a.text-decoration-none:hover h5 {
 
 .opacity-50 {
     opacity: 0.5;
+}
+
+.text-primary-dark {
+    color: #26335F;
+}
+
+.text-primary-red {
+    color: #C1221C;
 }

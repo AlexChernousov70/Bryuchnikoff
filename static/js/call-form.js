@@ -60,16 +60,18 @@
         }
 
         function handleSuccessResponse(data, $form) {
+            if (!data) {
+                showToast('Неверный формат ответа сервера', 'error');
+                return;
+            }
             if (data.success) {
                 showToast(data.message || 'Ваша заявка принята! Мы скоро с вами свяжемся.', 'success');
                 $('#orderCallModal').modal('hide');
                 $form[0].reset();
             } else {
                 const errorText = data.errors ? 
-                    Object.entries(data.errors)
-                        .map(([field, errors]) => Array.isArray(errors) ? errors.join(' ') : errors)
-                        .join('\n') 
-                    : 'Неизвестная ошибка';
+                    Object.values(data.errors).flat().join(' ') : 
+                    (data.message || 'Неизвестная ошибка');
                 showToast(errorText, 'error');
             }
         }

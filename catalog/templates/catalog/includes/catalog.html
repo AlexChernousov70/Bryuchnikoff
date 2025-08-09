@@ -1,12 +1,12 @@
 <div class="mb-4 col-md-3">
-    <h2 class="mb-4 text-left" style="color: #26335F;">Наш каталог</h2>
+    <h2 class="mb-4 text-left text-primary-dark">Наш каталог</h2>
     <div class="list-group">
         {% for category in categories %}
         <a href="{% url 'catalog:product_list' category.slug %}" 
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
-            style="border-left: 4px solid #C1221C;">
-            <span style="color: #26335F;">{{ category.name }}</span>
-            <i class="bi bi-chevron-right" style="color: #26335F;"></i>
+            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 text-primary-red"
+            style="border-left: 4px solid">
+            <span class=text-primary-dark>{{ category.name }}</span>
+            <i class="bi bi-chevron-right text-primary-dark"></i>
         </a>
         {% endfor %}
     </div>
