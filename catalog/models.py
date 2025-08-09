@@ -116,8 +116,8 @@ class OrderCallBack(models.Model):
     is_processed = models.BooleanField(default=False, verbose_name="Обработан")
 
     class Meta:
-        verbose_name = "Заказ на обраный звонок"
+        verbose_name = "Заказ на обратный звонок"
         verbose_name_plural = "Заказы на обраный звонок"
         ordering = ['-created_at']
     def __str__(self):
-        return f"{self.name} ({self.phone})"
+        return f"Запрос звонка от {self.name} ({self.phone})"
