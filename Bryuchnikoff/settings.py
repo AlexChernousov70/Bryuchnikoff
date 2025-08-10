@@ -12,7 +12,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost',
+    '127.0.0.1',
+    '188.225.10.39',
+    'bryuchnikoff-lite.ru'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://188.225.10.39',
+    'https://188.225.10.39',
+    'http://bryuchnikoff-lite.ru',
+    'https://bryuchnikoff-lite.ru'
+]
 
 # Application definition
 
