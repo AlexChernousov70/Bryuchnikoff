@@ -5,7 +5,7 @@
                 <h5 class="modal-title" id="reviewModalLabel">Оставить отзыв</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="reviewForm" method="post" action="{% url 'catalog:review_create' slug=product.category.slug product_id=product.id %}">
+            <form id="reviewForm" method="post" action="{% url 'catalog:review_create' slug=product.category.slug product_article=product.article %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">

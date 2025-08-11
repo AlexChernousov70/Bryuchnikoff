@@ -87,14 +87,13 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
-    pk_url_kwarg = 'product_id'
     slug_url_kwarg = 'slug'
 
     def get_object(self, queryset=None):
         try:
-            # Получаем товар по ID и проверяем, что он принадлежит указанной категории
+            # Получаем товар по артиклу и проверяем, что он принадлежит указанной категории
             return Product.objects.get(
-                id=self.kwargs['product_id'],
+                article=self.kwargs['product_article'],
                 category__slug=self.kwargs['slug']
             )
         except Product.DoesNotExist:
@@ -132,7 +131,7 @@ class OrderCreateView(CreateView):
         # Проверка товара
         try:
             product = Product.objects.get(
-                id=self.request.POST.get('product_id'),
+                article=self.request.POST.get('product_article'),
                 in_stock=True
             )
         except Product.DoesNotExist:
@@ -180,30 +179,28 @@ class ReviewCreateView(CreateView):
     template_name = 'catalog/includes/review_create.html'
     
     def form_valid(self, form):
-        product = Product.objects.get(id=self.kwargs['product_id'])
-        review = form.save(commit=False)
-        review.product = product
-        review.save()
-        
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': 'Спасибо за ваш отзыв! Он будет опубликован после проверки.'
-            })
-        
-        messages.success(self.request, 'Спасибо за ваш отзыв! Он будет опубликован после проверки.')
-        return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors.get_json_data()
-            }, status=400)
-        return super().form_invalid(form)
+        try:
+            product = Product.objects.get(
+                article=self.kwargs['product_article'],
+                category__slug=self.kwargs['slug']
+            )
+            review = form.save(commit=False)
+            review.product = product
+            review.save()
+            
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Спасибо за ваш отзыв! Он будет опубликован после проверки.'
+                })
+            
+            messages.success(self.request, 'Спасибо за ваш отзыв! Он будет опубликован после проверки.')
+            return super().form_valid(form)
+        except Product.DoesNotExist:
+            raise Http404("Товар не найден")
     
     def get_success_url(self):
         return reverse('catalog:product_detail', kwargs={
             'slug': self.kwargs['slug'],
-            'product_id': self.kwargs['product_id']
+            'product_article': self.kwargs['product_article']
         })
